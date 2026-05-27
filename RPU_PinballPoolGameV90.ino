@@ -126,7 +126,11 @@ unsigned long HighScore = 0;
 unsigned long AwardScores[3];           // Score thresholds for awards
 int Credits = 0;
 int MaximumCredits = 20;
-boolean FreePlayMode = false;
+
+// CFTBL - Change initial FreePlayMode setting to true
+// boolean FreePlayMode = false;
+boolean FreePlayMode = true;
+
 boolean MatchFeature = true;            //  Allows Match Feature to run
 
 #define MAX_TILT_WARNINGS_MAX    2
