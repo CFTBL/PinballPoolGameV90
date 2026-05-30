@@ -8,13 +8,19 @@
  
 */
 
-// Updated by CFTBL on 05/28/2026
+// Updated by CFTBL on 05/30/2026
 
 #include "RPULite_Config.h"
 #include "RPULite.h"
 #include "PinballPoolGame.h"
 #include "SelfTestAndAudit.h"
 #include <EEPROM.h>
+
+// CFTBL - Include Tsunami Library
+#include <Tsunami.h>
+
+// CFTBL - Cretae an instance of the Tsunami class
+Tsunami tsunami;
 
 
 #define VERSION_NUMBER    90
@@ -418,7 +424,16 @@ void setup() {
 // Play Machine start tune - Have to set CurrentTime as we are not yet in the loop structure
 
   CurrentTime = millis();
-  PlaySoundEffect(SOUND_EFFECT_MACHINE_START);
+
+PlaySoundEffect(SOUND_EFFECT_MACHINE_START);
+
+// CFTBL - Initialize the Tsunami library on Serial1 (Arduino pins 18/19) and set track gain and play start tune
+  tsunami.start();
+  delay(2000);
+  tsunami.trackGain(1, 0);
+  tsunami.stopAllTracks();
+  tsunami.samplerateOffset(0, 5000);
+  tsunami.trackPlaySolo(1, 0, false);
 
 // Display SW Version
 
@@ -4604,15 +4619,24 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2000, true);
       break;
     case SOUND_EFFECT_10_PTS:
+      // CFTBL - Fade out start tune
+      tsunami.trackFade(1, -100, 3000, 1);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_100_PTS:
+      // CFTBL - Fade out start tune
+      tsunami.trackFade(1, -100, 3000, 1);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_1000_PTS:
+      // CFTBL - Fade out start tune
+      tsunami.trackFade(1, -100, 3000, 1);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_EXTRA:
+      // CFTBL - Fade out start tune
+      tsunami.trackFade(1, -100, 3000, 1);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 0);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_SPINNER_COMBO :
