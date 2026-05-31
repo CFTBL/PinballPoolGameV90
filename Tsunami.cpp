@@ -18,7 +18,8 @@ uint8_t txbuf[5];
 
 	versionRcvd = false;
 	sysinfoRcvd = false;
-  	TsunamiSerial.begin(57600);
+	// CFTBL - Change baud rate from 57600 to 19200
+  	TsunamiSerial.begin(19200);
 	flush();
 
 	// Request version string
