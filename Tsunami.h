@@ -17,10 +17,13 @@
 // The following defines are used to control which serial class is
 //  used. Uncomment only the one you wish to use. If all of them are
 //  commented out, the library will use Hardware Serial
-#define __TSUNAMI_USE_SERIAL1__
+
+// CFTBL - Use AltSoftSerial instead of serial1
+// AltSoftSerial uses Arduino's Pin D46 and a hardware timer at a max baudrate of 19200
+//#define __TSUNAMI_USE_SERIAL1__
 //#define __TSUNAMI_USE_SERIAL2__
 //#define __TSUNAMI_USE_SERIAL3__
-//#define __TSUNAMI_USE_ALTSOFTSERIAL__
+#define __TSUNAMI_USE_ALTSOFTSERIAL__
 // ==================================================================
 
 #define CMD_GET_VERSION				1
@@ -67,7 +70,7 @@
 
 
 #ifdef __TSUNAMI_USE_ALTSOFTSERIAL__
-#include "../AltSoftSerial/AltSoftSerial.h"
+#include <AltSoftSerial.h>
 #else
 #include <HardwareSerial.h>
 #ifdef __TSUNAMI_USE_SERIAL1__
