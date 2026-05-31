@@ -8,23 +8,22 @@
  
 */
 
-// Updated by CFTBL on 05/30/2026
+// CFTBL - Include Tsunami Stuff
 
 #include "RPULite_Config.h"
 #include "RPULite.h"
 #include "PinballPoolGame.h"
 #include "SelfTestAndAudit.h"
 #include <EEPROM.h>
+#include "Tsunami.h"
 
-// CFTBL - Include Tsunami Library
-#include <Tsunami.h>
-
-// CFTBL - Cretae an instance of the Tsunami class
 Tsunami tsunami;
 
-
 #define VERSION_NUMBER    90
-#define DEBUG_MESSAGES     1
+
+// CFTBL - Let's turn off debug
+#define DEBUG_MESSAGES     0
+
 #define COIN_DOOR_TELEMETRY // If uncommented, coin door settings are sent to monitor on boot
 //#define IN_GAME_TELEMETRY   // If uncommented, sends game status to monitor
 //#define EXECUTION_MESSAGES  // If uncommented, sends game logic telemetry to monitor
@@ -135,9 +134,10 @@ unsigned long AwardScores[3];           // Score thresholds for awards
 int Credits = 0;
 int MaximumCredits = 20;
 
-// CFTBL - Make FreePlayMode initial setting true instead of false
+// CFTBL - Make Free Play True
 // boolean FreePlayMode = false;
 boolean FreePlayMode = true;
+
 
 boolean MatchFeature = true;            //  Allows Match Feature to run
 
@@ -385,6 +385,10 @@ void setup() {
     Serial.begin(115200);
   }
 
+// CFTBL - Start up Tsunami code
+  tsunami.start();
+  delay(2000);          // Wait for Tsunami to finish booting
+
   // Tell the OS about game-specific lights and switches
   RPU_SetupGameSwitches(NUM_SWITCHES_WITH_TRIGGERS, NUM_PRIORITY_SWITCHES_WITH_TRIGGERS, TriggeredSwitches);
 
@@ -424,12 +428,9 @@ void setup() {
 // Play Machine start tune - Have to set CurrentTime as we are not yet in the loop structure
 
   CurrentTime = millis();
+  PlaySoundEffect(SOUND_EFFECT_MACHINE_START);
 
-PlaySoundEffect(SOUND_EFFECT_MACHINE_START);
-
-// CFTBL - Initialize the Tsunami library on Serial1 (Arduino pins 18/19) and set track gain and play start tune
-  tsunami.start();
-  delay(2000);
+// CFTBL - Let's play music
   tsunami.trackGain(1, 0);
   tsunami.stopAllTracks();
   tsunami.samplerateOffset(0, 5000);
@@ -4619,24 +4620,15 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2000, true);
       break;
     case SOUND_EFFECT_10_PTS:
-      // CFTBL - Fade out start tune
-      tsunami.trackFade(1, -100, 3000, 1);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_100_PTS:
-      // CFTBL - Fade out start tune
-      tsunami.trackFade(1, -100, 3000, 1);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_1000_PTS:
-      // CFTBL - Fade out start tune
-      tsunami.trackFade(1, -100, 3000, 1);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_EXTRA:
-      // CFTBL - Fade out start tune
-      tsunami.trackFade(1, -100, 3000, 1);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 0);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_SPINNER_COMBO :
@@ -5175,3 +5167,4 @@ int ShowMatchSequence(boolean curStateChanged) {
 
   return MACHINE_STATE_MATCH_MODE;
 }
+
