@@ -21,8 +21,8 @@ Tsunami tsunami;
 
 #define VERSION_NUMBER    90
 
-// CFTBL - Let's turn off debug
-#define DEBUG_MESSAGES     0
+// CFTBL - Let's turn ON debug
+#define DEBUG_MESSAGES     1
 
 #define COIN_DOOR_TELEMETRY // If uncommented, coin door settings are sent to monitor on boot
 //#define IN_GAME_TELEMETRY   // If uncommented, sends game status to monitor
@@ -397,7 +397,18 @@ void setup() {
   }
  
   // Set up the chips and interrupts
+
+// CFTBL - Let's play music
+  tsunami.trackGain(1, 0);
+  tsunami.stopAllTracks();
+  tsunami.samplerateOffset(0, 5000);
+  tsunami.trackPlaySolo(1, 0, false);
+  delay(5000);
+  tsunami.trackFade(1, -100, 3000, 1);
+
   RPU_InitializeMPU();
+
+
   RPU_DisableSolenoidStack();
   RPU_SetDisableFlippers(true);
 
@@ -430,11 +441,7 @@ void setup() {
   CurrentTime = millis();
   PlaySoundEffect(SOUND_EFFECT_MACHINE_START);
 
-// CFTBL - Let's play music
-  tsunami.trackGain(1, 0);
-  tsunami.stopAllTracks();
-  tsunami.samplerateOffset(0, 5000);
-  tsunami.trackPlaySolo(1, 0, false);
+
 
 // Display SW Version
 
