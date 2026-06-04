@@ -8,22 +8,15 @@
  
 */
 
-// CFTBL - Include Tsunami Stuff
-
 #include "RPULite_Config.h"
 #include "RPULite.h"
 #include "PinballPoolGame.h"
 #include "SelfTestAndAudit.h"
 #include <EEPROM.h>
-#include "Tsunami.h"
 
-Tsunami tsunami;
 
 #define VERSION_NUMBER    90
-
-// CFTBL - Let's turn ON debug
 #define DEBUG_MESSAGES     1
-
 #define COIN_DOOR_TELEMETRY // If uncommented, coin door settings are sent to monitor on boot
 //#define IN_GAME_TELEMETRY   // If uncommented, sends game status to monitor
 //#define EXECUTION_MESSAGES  // If uncommented, sends game logic telemetry to monitor
@@ -133,12 +126,7 @@ unsigned long HighScore = 0;
 unsigned long AwardScores[3];           // Score thresholds for awards
 int Credits = 0;
 int MaximumCredits = 20;
-
-// CFTBL - Make Free Play True
-// boolean FreePlayMode = false;
-boolean FreePlayMode = true;
-
-
+boolean FreePlayMode = false;
 boolean MatchFeature = true;            //  Allows Match Feature to run
 
 #define MAX_TILT_WARNINGS_MAX    2
@@ -385,10 +373,6 @@ void setup() {
     Serial.begin(115200);
   }
 
-// CFTBL - Start up Tsunami code
-  tsunami.start();
-  delay(2000);          // Wait for Tsunami to finish booting
-
   // Tell the OS about game-specific lights and switches
   RPU_SetupGameSwitches(NUM_SWITCHES_WITH_TRIGGERS, NUM_PRIORITY_SWITCHES_WITH_TRIGGERS, TriggeredSwitches);
 
@@ -397,18 +381,7 @@ void setup() {
   }
  
   // Set up the chips and interrupts
-
-// CFTBL - Let's play music
-  tsunami.trackGain(1, 0);
-  tsunami.stopAllTracks();
-  tsunami.samplerateOffset(0, 5000);
-  tsunami.trackPlaySolo(1, 0, false);
-  delay(5000);
-  tsunami.trackFade(1, -100, 3000, 1);
-
   RPU_InitializeMPU();
-
-
   RPU_DisableSolenoidStack();
   RPU_SetDisableFlippers(true);
 
@@ -440,8 +413,6 @@ void setup() {
 
   CurrentTime = millis();
   PlaySoundEffect(SOUND_EFFECT_MACHINE_START);
-
-
 
 // Display SW Version
 
@@ -5174,4 +5145,3 @@ int ShowMatchSequence(boolean curStateChanged) {
 
   return MACHINE_STATE_MATCH_MODE;
 }
-
