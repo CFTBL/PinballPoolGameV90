@@ -8,6 +8,8 @@
  
 */
 
+// CFTBL - Turn on Free Play 06-04-2026
+
 #include "RPULite_Config.h"
 #include "RPULite.h"
 #include "PinballPoolGame.h"
@@ -126,7 +128,13 @@ unsigned long HighScore = 0;
 unsigned long AwardScores[3];           // Score thresholds for awards
 int Credits = 0;
 int MaximumCredits = 20;
-boolean FreePlayMode = false;
+
+// CFTBL - Make FreePlayMode initially true instead of false
+
+boolean FreePlayMode = true;
+//boolean FreePlayMode = false;
+
+
 boolean MatchFeature = true;            //  Allows Match Feature to run
 
 #define MAX_TILT_WARNINGS_MAX    2
