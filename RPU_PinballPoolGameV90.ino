@@ -12,8 +12,8 @@
 //
 // CFTBL - Add Super WAV Trigger Sounds 06-18-2026
 //======================================================
-// Num  Binary	  D39          D32  Sound
-//	0	  00000000	0	0	0	0	0	0	0	0	
+// Num  Binary	  D39          D32  Sound Command
+//	0	  00000000	0	0	0	0	0	0	0	0	  Stop
 //	1	  00000001	0	0	0	0	0	0	0	1	  Ragtime Piano
 //	2	  00000010	0	0	0	0	0	0	1	0	  Shoot the Two
 //	3	  00000011	0	0	0	0	0	0	1	1	  Shoot the Three
@@ -32,6 +32,28 @@
 //	16	00010000	0	0	0	1	0	0	0	0	  Eight Ball Collected
 //	17	00010001	0	0	0	1	0	0	0	1	  Super Bonus Lit
 //======================================================
+
+// CFTBL - Super WAV Trigger Wiring
+//======================================================
+//  BSOS  Host      Slave     Tsunami
+//  ----------------------------------------------------
+//  GND`            GND
+//  GND`                      GND
+//  5V              5V
+//  5V                        5V
+//        D32       D32
+//        D33       D33
+//        D34       D34
+//        D35       D35
+//        D36       D36
+//        D37       D37
+//        D38       D38
+//        D39       D39
+//        D40       D40
+//                  TX1     RX via 1K resistor
+//                  GND     RX via 2K Resistor
+//
+// Jambox Black (GND), Red (Right), and White (left) wires connect to Tsunami 1 Output
 
 
 #include "RPULite_Config.h"
@@ -77,7 +99,7 @@ const int ShoottheThirteen = 13;
 const int ShoottheFourteen = 14;
 const int ShoottheFifteen = 15;
 const int EightBallCollected = 16;
-const int SuperBonusLit = 17;
+const int SuperBonus = 17;
 
 // MachineState
 //  0 - Attract Mode
@@ -434,23 +456,21 @@ void setup() {
     Serial.begin(115200);
   }
 
-  // CFTBL - Let the Tsunami initialize 06-18-2026
-  delay(2000);
-  
-  //====================-=-=-=-=--=-=-=4-=354-5934098-02368-2304968-23906823-489
-  digitalWrite(STROBE_PIN, 1);
-  
-  delay(5000);
-  
-  // Set all the output pins, 39 through 32 as outputs
+  // CFTBL - Set Strobe output pin 06-18-2026
+  pinMode(STROBE_PIN, OUTPUT);
+   
+  // CFTBL - Set all the output pins, 39 through 32 as outputs 06-18-2026
   for (int i = 0; i < 8; i++) {
     pinMode(pinArray[i], OUTPUT);
   }
+  
+  // CFTBL - Let things settle down 06-18-2026
+  delay(3000);
+    
+  // CFTBL - Reset Strobe Pin (1 is Inactive) 06-18-2026
+  digitalWrite(STROBE_PIN, 1);
 
-  // Set Strobe output pin
-  pinMode(STROBE_PIN, OUTPUT);
-
-  // Write zeros to all the output pins
+  // CFTBL - Write zeros to all the output pins 06-18-2026
   for (int i = 0; i < 8; i++) {
     digitalWrite(pinArray[i], 0);
   }
@@ -2696,6 +2716,10 @@ int InitGamePlay(boolean curStateChanged) {   //zzzzz
     returnState = MACHINE_STATE_INIT_NEW_BALL;
   }
 
+  // CFTBL - Play Game Start Tune 06-18-2026
+  intToBitArray(RagtimePiano, bitArray);
+  writeBitArrayToOutputPins(bitArray);
+
   if (CurrentTime<=InitGamePlayChime) {
     returnState = MACHINE_STATE_INIT_GAMEPLAY;
   }
@@ -2862,6 +2886,10 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
 
   byte switchHit;
     while ( (switchHit=RPU_PullFirstFromSwitchStack())!=SWITCH_STACK_EMPTY ) {   // -A-
+
+      // CFTBL - A Switch was hit so stop all tracks 06-18-2026
+      intToBitArray(Stop, bitArray);
+      writeBitArrayToOutputPins(bitArray);
 
       if (!Tilted) {
   
