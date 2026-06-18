@@ -9,6 +9,30 @@
 */
 
 // CFTBL - Turn on Free Play 06-04-2026
+//
+// CFTBL - Add Super WAV Trigger Sounds 06-18-2026
+//======================================================
+// Num  Binary	  D39          D32  Sound
+//	0	  00000000	0	0	0	0	0	0	0	0	
+//	1	  00000001	0	0	0	0	0	0	0	1	  Ragtime Piano
+//	2	  00000010	0	0	0	0	0	0	1	0	  Shoot the Two
+//	3	  00000011	0	0	0	0	0	0	1	1	  Shoot the Three
+//	4	  00000100	0	0	0	0	0	1	0	0	  Shoot the Four
+//	5	  00000101	0	0	0	0	0	1	0	1	  Shoot the Five
+//	6	  00000110	0	0	0	0	0	1	1	0	  Shoot the Six
+//	7	  00000111	0	0	0	0	0	1	1	1	  Shoot the Seven
+//	8	  00001000	0	0	0	0	1	0	0	0	  Get the Eight Ball
+//	9	  00001001	0	0	0	0	1	0	0	1	  Shoot the Nine
+//	10	00001010	0	0	0	0	1	0	1	0	  Shoot the Ten
+//	11	00001011	0	0	0	0	1	0	1	1	  Shoot the Eleven
+//	12	00001100	0	0	0	0	1	1	0	0	  Shoot the Twelve
+//	13	00001101	0	0	0	0	1	1	0	1	  Shoot the Thirteen
+//	14	00001110	0	0	0	0	1	1	1	0	  Shoot the Fourteen
+//	15	00001111	0	0	0	0	1	1	1	1	  Shoot the Fifteen
+//	16	00010000	0	0	0	1	0	0	0	0	  Eight Ball Collected
+//	17	00010001	0	0	0	1	0	0	0	1	  Super Bonus Lit
+//======================================================
+
 
 #include "RPULite_Config.h"
 #include "RPULite.h"
@@ -25,6 +49,35 @@
 
 #define USE_SCORE_OVERRIDES
 #define USE_SCORE_ACHIEVEMENTS
+
+// CFTBL - Strobe pin will tell the slave Arduino to read a command 06-18-2026
+#define STROBE_PIN 40
+
+// CFTBL - bitArray will contain the command being sent to the slave Arduino 06-18-2026
+bool bitArray[8] = {0,0,0,0,0,0,0,0};
+
+// CFTBL - pinArray is the set of Arduino pins that the command is written to 06-18-2026
+int pinArray[8] = {39,38,37,36,35,34,33,32};
+
+// CFTBL - Sound files on the Tsunami SD card are prefixed with the following numbers 06-18-2026
+const int Stop = 0;
+const int RagtimePiano = 1;
+const int ShoottheTwo = 2;
+const int ShoottheThree = 3;
+const int ShoottheFour = 4;
+const int ShoottheFive = 5;
+const int ShoottheSix = 6;
+const int ShoottheSeven = 7;
+const int GettheEightBall = 8;
+const int ShoottheNine = 9;
+const int ShoottheTen = 10;
+const int ShoottheEleven = 11;
+const int ShoottheTwelve = 12;
+const int ShoottheThirteen = 13;
+const int ShoottheFourteen = 14;
+const int ShoottheFifteen = 15;
+const int EightBallCollected = 16;
+const int SuperBonusLit = 17;
 
 // MachineState
 //  0 - Attract Mode
@@ -381,6 +434,27 @@ void setup() {
     Serial.begin(115200);
   }
 
+  // CFTBL - Let the Tsunami initialize 06-18-2026
+  delay(2000);
+  
+  //====================-=-=-=-=--=-=-=4-=354-5934098-02368-2304968-23906823-489
+  digitalWrite(STROBE_PIN, 1);
+  
+  delay(5000);
+  
+  // Set all the output pins, 39 through 32 as outputs
+  for (int i = 0; i < 8; i++) {
+    pinMode(pinArray[i], OUTPUT);
+  }
+
+  // Set Strobe output pin
+  pinMode(STROBE_PIN, OUTPUT);
+
+  // Write zeros to all the output pins
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(pinArray[i], 0);
+  }
+
   // Tell the OS about game-specific lights and switches
   RPU_SetupGameSwitches(NUM_SWITCHES_WITH_TRIGGERS, NUM_PRIORITY_SWITCHES_WITH_TRIGGERS, TriggeredSwitches);
 
@@ -432,6 +506,24 @@ void setup() {
     Serial.write("Done with setup\n");
   }
 
+}
+
+// CFTBL - This function converts a sound command to an 8-bit binary number 06-18-24
+void intToBitArray(uint8_t num, bool bits[8]) {
+  for (int i = 0; i < 8; i++) {
+    bits[i] = (num >> (7 - i)) & 0x01;  // MSB first
+  }
+}
+
+// CFTBL - This function sends a binary sound command to the slave Arduino 06-18-24
+void writeBitArrayToOutputPins(bool bits[8]) {
+
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(pinArray[i], bits[i]);
+  }
+  digitalWrite(STROBE_PIN, LOW);
+  delay(100);
+  digitalWrite(STROBE_PIN, HIGH);
 }
 
 void ReadStoredParameters() {
