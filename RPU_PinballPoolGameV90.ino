@@ -99,7 +99,7 @@ const int ShoottheThirteen = 13;
 const int ShoottheFourteen = 14;
 const int ShoottheFifteen = 15;
 const int EightBallCollected = 16;
-const int SuperBonus = 17;
+const int SuperBonusReady = 17;
 
 // MachineState
 //  0 - Attract Mode
