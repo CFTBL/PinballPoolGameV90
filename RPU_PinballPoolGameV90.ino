@@ -452,6 +452,11 @@ void PlaySoundEffect(byte soundEffectNum, boolean priority = false);
 void ClearFlashingLampQueue(boolean emptyAndSetLamp = false);
 
 void setup() {
+  
+  // CFTBL - Turn on Serial for development purposes 06-19-2026
+  Serial.begin(115200);
+  Serial.println("Serial turned on");
+
   if (DEBUG_MESSAGES) {
     Serial.begin(115200);
   }
@@ -3944,6 +3949,8 @@ boolean CaptureBall(byte ballswitchnum) {
         // Change to new NextBall
         NextBall = NextBallCheck;
         NextBallTime = CurrentTime;
+        Serial.print("NextBall is ");
+        Serial.println(NextBall);
  
         // If here NextBall is valid, offset switchnum down by one for lamp number
         // Start lamp flashing, note end state is on, only allowed for lanes 5-7 when AlleyMode is running
