@@ -962,7 +962,11 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     //Serial.println(F("--InitNewBall, ball still in outhole--"));
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
+    // CFTBL - Play Game Start Tune 06-18-2026
+    intToBitArray(RagtimePiano, bitArray);
+    writeBitArrayToOutputPins(bitArray);
     return MACHINE_STATE_NORMAL_GAMEPLAY;
+    
   }
   
 }
@@ -2715,10 +2719,6 @@ int InitGamePlay(boolean curStateChanged) {   //zzzzz
     RPU_SetDisableFlippers(false);
     returnState = MACHINE_STATE_INIT_NEW_BALL;
   }
-
-  // CFTBL - Play Game Start Tune 06-18-2026
-  intToBitArray(RagtimePiano, bitArray);
-  writeBitArrayToOutputPins(bitArray);
 
   if (CurrentTime<=InitGamePlayChime) {
     returnState = MACHINE_STATE_INIT_GAMEPLAY;
