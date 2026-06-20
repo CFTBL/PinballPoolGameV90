@@ -3948,6 +3948,10 @@ boolean CaptureBall(byte ballswitchnum) {
         NextBallTime = CurrentTime;
         Serial.print("NextBall is ");
         Serial.println(NextBall);
+        // CFTBL - Try Next Ball Sounds
+        intToBitArray(RagtimePiano, bitArray);
+        writeBitArrayToOutputPins(bitArray);
+
  
         // If here NextBall is valid, offset switchnum down by one for lamp number
         // Start lamp flashing, note end state is on, only allowed for lanes 5-7 when AlleyMode is running
