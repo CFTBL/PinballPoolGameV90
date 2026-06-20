@@ -3946,10 +3946,9 @@ boolean CaptureBall(byte ballswitchnum) {
         // Change to new NextBall
         NextBall = NextBallCheck;
         NextBallTime = CurrentTime;
-        Serial.print("NextBall is ");
-        Serial.println(NextBall);
-        // CFTBL - Try Next Ball Sounds
-        intToBitArray(RagtimePiano, bitArray);
+
+        // CFTBL - Try Next Ball Sounds 06-19-2026
+        intToBitArray(NextBall, bitArray);
         writeBitArrayToOutputPins(bitArray);
 
  
@@ -4535,7 +4534,9 @@ int SoundEffectDuration[38] =
 
 unsigned long NextSoundEffectTime = 0;  
 
-void PlaySoundEffect(byte soundEffectNum, boolean priority = false) {
+// CFTBL - Nullify all chime sounds for now 06-19-2026
+void PlaySoundEffect(byte soundEffectNum, boolean priority = false) {}
+void OldPlaySoundEffect(byte soundEffectNum, boolean priority = false) {
 //void PlaySoundEffect(byte soundEffectNum) {
 
 unsigned long TimeStart;
