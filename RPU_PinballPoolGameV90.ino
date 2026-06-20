@@ -31,6 +31,7 @@
 //	15	00001111	0	0	0	0	1	1	1	1	  Shoot the Fifteen
 //	16	00010000	0	0	0	1	0	0	0	0	  Eight Ball Collected
 //	17	00010001	0	0	0	1	0	0	0	1	  Super Bonus Lit
+//	18	00010010	0	0	0	1	0	0	0	1	  Stop Track One
 //======================================================
 
 // CFTBL - Super WAV Trigger Wiring
@@ -98,6 +99,7 @@ const int ShoottheFourteen = 14;
 const int ShoottheFifteen = 15;
 const int EightBallCollected = 16;
 const int SuperBonusReady = 17;
+const int StopTrackOne = 18;
 
 // MachineState
 //  0 - Attract Mode
@@ -2961,8 +2963,8 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (!CaptureBall(4)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
-          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
-          intToBitArray(Stop, bitArray);
+          // CFTBL - Lane Switch was hit so stop track one 06-20-2026
+          intToBitArray(StopTrackOne, bitArray);
           writeBitArrayToOutputPins(bitArray);
           break;
         case SW_3_11_BALL: // Balls[]
@@ -2985,8 +2987,8 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
-          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
-          intToBitArray(Stop, bitArray);
+          // CFTBL - Lane Switch was hit so stop track one 06-20-2026
+          intToBitArray(StopTrackOne, bitArray);
           writeBitArrayToOutputPins(bitArray);
           break;
         case SW_2_10_BALL: // Balls[]
@@ -3009,8 +3011,8 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
-          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
-          intToBitArray(Stop, bitArray);
+          // CFTBL - Lane Switch was hit so stop track one 06-20-2026
+          intToBitArray(StopTrackOne, bitArray);
           writeBitArrayToOutputPins(bitArray);
           break;
         case SW_1_9_BALL: // Balls[]
@@ -3018,8 +3020,8 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (!CaptureBall(1)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
-          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
-          intToBitArray(Stop, bitArray);
+          // CFTBL - Lane Switch was hit so stop track one 06-20-2026
+          intToBitArray(StopTrackOne, bitArray);
           writeBitArrayToOutputPins(bitArray);
           break;
         case SW_8_BALL:
