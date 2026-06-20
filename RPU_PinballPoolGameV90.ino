@@ -64,7 +64,7 @@
 
 
 #define VERSION_NUMBER    90
-#define DEBUG_MESSAGES     1
+#define DEBUG_MESSAGES     0
 #define COIN_DOOR_TELEMETRY // If uncommented, coin door settings are sent to monitor on boot
 //#define IN_GAME_TELEMETRY   // If uncommented, sends game status to monitor
 //#define EXECUTION_MESSAGES  // If uncommented, sends game logic telemetry to monitor
@@ -453,9 +453,6 @@ void ClearFlashingLampQueue(boolean emptyAndSetLamp = false);
 
 void setup() {
   
-  // CFTBL - Turn on Serial for development purposes 06-19-2026
-  Serial.begin(115200);
-  Serial.println("Serial turned on");
 
   if (DEBUG_MESSAGES) {
     Serial.begin(115200);
