@@ -2889,10 +2889,6 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
   byte switchHit;
     while ( (switchHit=RPU_PullFirstFromSwitchStack())!=SWITCH_STACK_EMPTY ) {   // -A-
 
-      // CFTBL - A Switch was hit so stop all tracks 06-18-2026
-      intToBitArray(Stop, bitArray);
-      writeBitArrayToOutputPins(bitArray);
-
       if (!Tilted) {
   
       switch (switchHit) {
@@ -2967,6 +2963,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (!CaptureBall(4)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_3_11_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
@@ -2988,6 +2987,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_2_10_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
@@ -3009,12 +3011,18 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_1_9_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
           if (!CaptureBall(1)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_8_BALL:
           switch (GameMode[CurrentPlayer]) {
