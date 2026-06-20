@@ -55,13 +55,11 @@
 //
 // Jambox Black (GND), Red (Right), and White (left) wires connect to Tsunami 1 Output
 
-
 #include "RPULite_Config.h"
 #include "RPULite.h"
 #include "PinballPoolGame.h"
 #include "SelfTestAndAudit.h"
 #include <EEPROM.h>
-
 
 #define VERSION_NUMBER    90
 #define DEBUG_MESSAGES     0
