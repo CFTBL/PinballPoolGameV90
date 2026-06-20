@@ -2887,10 +2887,6 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
   byte switchHit;
     while ( (switchHit=RPU_PullFirstFromSwitchStack())!=SWITCH_STACK_EMPTY ) {   // -A-
 
-      // CFTBL - A Switch was hit so stop all tracks 06-18-2026
-      intToBitArray(Stop, bitArray);
-      writeBitArrayToOutputPins(bitArray);
-
       if (!Tilted) {
   
       switch (switchHit) {
@@ -2965,6 +2961,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (!CaptureBall(4)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_3_11_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
@@ -2986,6 +2985,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_2_10_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
@@ -3007,12 +3009,18 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_1_9_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
           if (!CaptureBall(1)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
+          // CFTBL - Lane Switch was hit so stop all tracks 06-20-2026
+          intToBitArray(Stop, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           break;
         case SW_8_BALL:
           switch (GameMode[CurrentPlayer]) {
@@ -3944,10 +3952,9 @@ boolean CaptureBall(byte ballswitchnum) {
         // Change to new NextBall
         NextBall = NextBallCheck;
         NextBallTime = CurrentTime;
-        Serial.print("NextBall is ");
-        Serial.println(NextBall);
-        // CFTBL - Try Next Ball Sounds
-        intToBitArray(RagtimePiano, bitArray);
+
+        // CFTBL - Try Next Ball Sounds 06-19-2026
+        intToBitArray(NextBall, bitArray);
         writeBitArrayToOutputPins(bitArray);
 
  
@@ -4533,7 +4540,9 @@ int SoundEffectDuration[38] =
 
 unsigned long NextSoundEffectTime = 0;  
 
-void PlaySoundEffect(byte soundEffectNum, boolean priority = false) {
+// CFTBL - Nullify all chime sounds for now 06-19-2026
+void PlaySoundEffect(byte soundEffectNum, boolean priority = false) {}
+void OldPlaySoundEffect(byte soundEffectNum, boolean priority = false) {
 //void PlaySoundEffect(byte soundEffectNum) {
 
 unsigned long TimeStart;
