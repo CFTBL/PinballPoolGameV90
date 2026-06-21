@@ -3278,19 +3278,10 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           }
           break;
         case SW_BUMPER_BOTTOM:
-          // CFTBL - Add pop bumper sound 06-21-2026
-          intToBitArray(Pops, bitArray);
-          writeBitArrayToOutputPins(bitArray);
           PopDelta = ++PopDelta;
-        case SW_BUMPER_RIGHT:
-          // CFTBL - Add pop bumper sound 06-21-2026
-          intToBitArray(Pops, bitArray);
-          writeBitArrayToOutputPins(bitArray);        
+        case SW_BUMPER_RIGHT:        
           PopDelta = ++PopDelta;
         case SW_BUMPER_LEFT:
-          // CFTBL - Add pop bumper sound 06-21-2026
-          intToBitArray(Pops, bitArray);
-          writeBitArrayToOutputPins(bitArray);
           PopCount[CurrentPlayer] = ++PopCount[CurrentPlayer];
           if (PopCount[CurrentPlayer] > (Pop_Threshold-1)) {
             PopMode[CurrentPlayer] += 1;
@@ -4752,21 +4743,29 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1575);
       break;
     case SOUND_EFFECT_POP_100:
-      // CFTBL - Silence Pops 06-20-2026
+      // CFTBL - Replace Pops 06-21-2026
+      intToBitArray(Pops, bitArray);
+      writeBitArrayToOutputPins(bitArray);
       //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_POP_1000:
-      // CFTBL - Silence Pops 06-20-2026
+      // CFTBL - Replace Pops 06-21-2026
+      intToBitArray(Pops, bitArray);
+      writeBitArrayToOutputPins(bitArray);
       //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 10);
       //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
       break;
     case SOUND_EFFECT_POP_1000b:
-      // CFTBL - Silence Pops 06-20-2026
+      // CFTBL - Replace Pops 06-21-2026
+      intToBitArray(Pops, bitArray);
+      writeBitArrayToOutputPins(bitArray);
       //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 10);
       //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
       break;
     case SOUND_EFFECT_POP_1000c:
-      // CFTBL - Silence Pops 06-20-2026
+      // CFTBL - Replace Pops 06-21-2026
+      intToBitArray(Pops, bitArray);
+      writeBitArrayToOutputPins(bitArray);
       //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 10);
       //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
       break;
