@@ -4579,9 +4579,7 @@ int SoundEffectDuration[38] =
 
 unsigned long NextSoundEffectTime = 0;  
 
-// CFTBL - Nullify all chime sounds for now 06-19-2026
-void PlaySoundEffect(byte soundEffectNum, boolean priority = false) {}
-void OldPlaySoundEffect(byte soundEffectNum, boolean priority = false) {
+void PlaySoundEffect(byte soundEffectNum, boolean priority = false) {
 //void PlaySoundEffect(byte soundEffectNum) {
 
 unsigned long TimeStart;
@@ -4693,21 +4691,22 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart+900, true);
       break;
     case SOUND_EFFECT_GAME_START:
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 4, TimeStart + 500);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 679);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 846);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1013);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1208);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1313);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1408);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1546);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1746);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1842);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1942);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2079);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 2246);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2413);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2579);
+      // CFTBL - Silence Game Start chimes 06-20-2026
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 4, TimeStart + 500);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 679);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 846);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1013);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1208);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1313);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1408);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1546);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1746);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1842);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1942);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2079);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 2246);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2413);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2579);
       break;
     case SOUND_EFFECT_EXTRA_BALL:
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart, true);
@@ -4753,19 +4752,23 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1575);
       break;
     case SOUND_EFFECT_POP_100:
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 0);
+      // CFTBL - Silence Pops 06-20-2026
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 0);
       break;
     case SOUND_EFFECT_POP_1000:
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 10);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
+      // CFTBL - Silence Pops 06-20-2026
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 10);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
       break;
     case SOUND_EFFECT_POP_1000b:
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 10);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
+      // CFTBL - Silence Pops 06-20-2026
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 10);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
       break;
     case SOUND_EFFECT_POP_1000c:
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 10);
-      RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
+      // CFTBL - Silence Pops 06-20-2026
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 10);
+      //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 20);
       break;
     case SOUND_EFFECT_TILT_WARNING:
       RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 0);
