@@ -12,7 +12,7 @@
 //
 // CFTBL - Add Super WAV Trigger Sounds 06-18-2026
 //======================================================
-// Num  Binary	  D39          D32  Sound Command
+// Num  Binary	  D39          D32  Command
 //	0	  00000000	0	0	0	0	0	0	0	0	  Stop
 //	1	  00000001	0	0	0	0	0	0	0	1	  Ragtime Piano
 //	2	  00000010	0	0	0	0	0	0	1	0	  Shoot the Two
@@ -32,8 +32,22 @@
 //	16	00010000	0	0	0	1	0	0	0	0	  Eight Ball Collected
 //	17	00010001	0	0	0	1	0	0	0	1	  Super Bonus Lit
 //	18	00010010	0	0	0	1	0	0	0	1	  Stop Track One
-//======================================================
+//	19	00010011	0	0	0	1	0	0	1	1	  Pops
+//	20	00010100	0	0	0	1	0	1	0	0	  Ball Drain
+//	21	00010101	0	0	0	1	0	1	0	1	  Mode Fanfare
+//	22	00010110	0	0	0	1	0	1	1	0	  Next Ball Collected
+//	23	00010111	0	0	0	1	0	1	1	1	  Spinner Advanced
+//	24	00011000	0	0	0	1	1	0	0	0	  Scramble Ball
+//	25	00011001	0	0	0	1	1	0	0	1	  Roaming Ball
+//	26	00011010	0	0	0	1	1	0	1	0	  Alley Mode
+//	27	00011011	0	0	0	1	1	0	1	1	  Two Goals Achieved
+//	28	00011100	0	0	0	1	1	1	0	0	  Four Goals Achieved
+//	29	00011101	0	0	0	1	1	1	0	1	  All Goals Achieved
+//	30	00011110	0	0	0	1	1	1	1	0	  One Goal Achieved
+//	31	00011111	0	0	0	1	1	1	1	1	  Three Goals Achieved
+//	32	00100000	0	0	1	0	0	0	0	0	  Five Goals Achieved
 
+//======================================================
 // CFTBL - Super WAV Trigger Wiring
 //======================================================
 //  BSOS  Host      Slave     Tsunami
@@ -100,6 +114,20 @@ const int ShoottheFifteen = 15;
 const int EightBallCollected = 16;
 const int SuperBonusReady = 17;
 const int StopTrackOne = 18;
+const int Pops = 19;
+const int BallDrain = 20;
+const int ModeFanfare = 21;
+const int NextBallCollected = 22;
+const int SpinnerAdvanced = 23;
+const int ScrambleBall = 24;
+const int RoamingBall = 25;
+const int AlleyMode = 26;
+const int TwoGoalsAchieved = 27;
+const int FourGoalsAchieved = 28;
+const int AllGoalsAchieved = 29;
+const int OneGoalAchieved = 30;
+const int ThreeGoalsAchieved = 31;
+const int FiveGoalsAchieved = 32;
 
 // MachineState
 //  0 - Attract Mode
@@ -3250,10 +3278,19 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           }
           break;
         case SW_BUMPER_BOTTOM:
+          // CFTBL - Add pop bumper sound 06-21-2026
+          intToBitArray(Pops, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           PopDelta = ++PopDelta;
         case SW_BUMPER_RIGHT:
+          // CFTBL - Add pop bumper sound 06-21-2026
+          intToBitArray(Pops, bitArray);
+          writeBitArrayToOutputPins(bitArray);        
           PopDelta = ++PopDelta;
         case SW_BUMPER_LEFT:
+          // CFTBL - Add pop bumper sound 06-21-2026
+          intToBitArray(Pops, bitArray);
+          writeBitArrayToOutputPins(bitArray);
           PopCount[CurrentPlayer] = ++PopCount[CurrentPlayer];
           if (PopCount[CurrentPlayer] > (Pop_Threshold-1)) {
             PopMode[CurrentPlayer] += 1;
