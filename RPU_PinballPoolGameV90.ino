@@ -2779,6 +2779,9 @@ unsigned int BonusBalls = 0;
 int CountdownBonus(boolean curStateChanged) {       //zzzzz
 
   if (curStateChanged) {
+    // CFTBL - Ball Over Sound 06-22-2026
+    intToBitArray(BallDrain, bitArray);
+    writeBitArrayToOutputPins(bitArray);
     CreditsFlashing = false;                // Stop flashing
     BIPFlashing = false;                    // Stop flashing
     ShowPlayerScores(0xFF, false, false);   // Reset all score displays
@@ -2895,9 +2898,6 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
       if (CurrentPlayer>=CurrentNumPlayers) {
         CurrentPlayer = 0;
         CurrentBallInPlay+=1;
-        // CFTBL - Ball Over Sound 06-22-2026
-        intToBitArray(BallDrain, bitArray);
-        writeBitArrayToOutputPins(bitArray);
       }
         
       if (CurrentBallInPlay>BallsPerGame) {
