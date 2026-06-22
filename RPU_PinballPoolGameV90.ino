@@ -3282,25 +3282,19 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           }
           break;
         case SW_BUMPER_BOTTOM:
-          // CFTBL - Replace Pops 06-21-2026
-          intToBitArray(Pops, bitArray);
-          writeBitArrayToOutputPins(bitArray);
           PopDelta = ++PopDelta;
-        case SW_BUMPER_RIGHT:
-          // CFTBL - Replace Pops 06-21-2026
-          intToBitArray(Pops, bitArray);
-          writeBitArrayToOutputPins(bitArray);        
+        case SW_BUMPER_RIGHT:        
           PopDelta = ++PopDelta;
         case SW_BUMPER_LEFT:
-          // CFTBL - Replace Pops 06-21-2026
-          intToBitArray(Pops, bitArray);
-          writeBitArrayToOutputPins(bitArray);
           PopCount[CurrentPlayer] = ++PopCount[CurrentPlayer];
           if (PopCount[CurrentPlayer] > (Pop_Threshold-1)) {
             PopMode[CurrentPlayer] += 1;
             SetGoals(3);
             PopCount[CurrentPlayer] = 0;
             PlaySoundEffect(SOUND_EFFECT_POP_MODE, true);
+            // CFTBL - Play Mode Fanfare 06-22-2026
+            intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
           }
           #ifdef EXECUTION_MESSAGES
           Serial.print(F("PopMode is:  "));
