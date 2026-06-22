@@ -2895,6 +2895,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
       if (CurrentPlayer>=CurrentNumPlayers) {
         CurrentPlayer = 0;
         CurrentBallInPlay+=1;
+        // CFTBL - Ball Over Sound 06-22-2026
+        intToBitArray(BallDrain, bitArray);
+        writeBitArrayToOutputPins(bitArray);
       }
         
       if (CurrentBallInPlay>BallsPerGame) {
