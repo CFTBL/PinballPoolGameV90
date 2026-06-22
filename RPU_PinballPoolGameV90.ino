@@ -46,6 +46,7 @@
 //	30	00011110	0	0	0	1	1	1	1	0	  One Goal Achieved
 //	31	00011111	0	0	0	1	1	1	1	1	  Three Goals Achieved
 //	32	00100000	0	0	1	0	0	0	0	0	  Five Goals Achieved
+//	33	00100000	0	0	1	0	0	0	0	1	  Ragtime Piano Delayed 3 Seconds
 
 //======================================================
 // CFTBL - Super WAV Trigger Wiring
@@ -128,6 +129,7 @@ const int AllGoalsAchieved = 29;
 const int OneGoalAchieved = 30;
 const int ThreeGoalsAchieved = 31;
 const int FiveGoalsAchieved = 32;
+const int RagtimePianoDelayed = 33;
 
 // MachineState
 //  0 - Attract Mode
@@ -4700,7 +4702,7 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2413);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2579);
       // CFTBL - Play shooter lane tune here for first ball first player 06-21-2026
-      intToBitArray(RagtimePiano, bitArray);
+      intToBitArray(RagtimePianoDelayed, bitArray);
       writeBitArrayToOutputPins(bitArray);
       break;
     case SOUND_EFFECT_EXTRA_BALL:
