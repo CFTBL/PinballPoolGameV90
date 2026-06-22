@@ -2779,9 +2779,6 @@ unsigned int BonusBalls = 0;
 int CountdownBonus(boolean curStateChanged) {       //zzzzz
 
   if (curStateChanged) {
-    // CFTBL - Ball Over Sound 06-22-2026
-    intToBitArray(BallDrain, bitArray);
-    writeBitArrayToOutputPins(bitArray);
     CreditsFlashing = false;                // Stop flashing
     BIPFlashing = false;                    // Stop flashing
     ShowPlayerScores(0xFF, false, false);   // Reset all score displays
