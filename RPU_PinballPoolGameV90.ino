@@ -992,9 +992,11 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     //Serial.println(F("--InitNewBall, ball still in outhole--"));
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
-    // CFTBL - Play Game Start Tune 06-18-2026
-    intToBitArray(RagtimePiano, bitArray);
-    writeBitArrayToOutputPins(bitArray);
+    // CFTBL - Play new ball tune here unless it is the first ball and first player 06-21-2026
+    if (ballNum != 1 && playerNum !=1) {
+      intToBitArray(RagtimePiano, bitArray);
+      writeBitArrayToOutputPins(bitArray);
+    }  
     return MACHINE_STATE_NORMAL_GAMEPLAY;
     
   }
@@ -4682,22 +4684,24 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart+900, true);
       break;
     case SOUND_EFFECT_GAME_START:
-      // CFTBL - Silence Game Start chimes 06-20-2026
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 4, TimeStart + 500);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 679);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 846);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1013);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1208);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1313);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1408);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1546);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1746);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1842);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1942);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2079);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 2246);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2413);
-      //RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2579);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 4, TimeStart + 500);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 679);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 846);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1013);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1208);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1313);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_1000, 3, TimeStart + 1408);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1546);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1746);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1842);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 1942);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2079);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 2246);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2413);
+      RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2579);
+      // CFTBL - Play shooter lane tune here for first ball first player 06-21-2026
+      intToBitArray(RagtimePiano, bitArray);
+      writeBitArrayToOutputPins(bitArray);
       break;
     case SOUND_EFFECT_EXTRA_BALL:
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart, true);
