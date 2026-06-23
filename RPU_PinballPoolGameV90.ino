@@ -91,6 +91,9 @@
 const int pinTxReady = 40; // Output to Listener
 const int pinRxAck   = 41; // Input from Listener
 
+// CFTBL - Actual Next Ball
+int actualNextBall;
+
 // CFTBL - bitArray will contain the command being sent to the slave Arduino 06-18-2026
 bool bitArray[8] = {0,0,0,0,0,0,0,0};
 
@@ -1013,8 +1016,11 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
     // CFTBL - Play delayed new ball tune elsewhere if it is the first ball and first player otherwise play non-delayed 06-23-2026
-    if (ballNum == 1 && playerNum == 1) {}
-    else {
+    if (ballNum != 1 && playerNum != 1) {
+      intToBitArray(RagtimePiano, bitArray);
+      writeBitArrayToOutputPins(bitArray);
+    }
+    if (ballNum == 1 && (playerNum >= 2 && playerNum <= 4)) {
       intToBitArray(RagtimePiano, bitArray);
       writeBitArrayToOutputPins(bitArray);
     }
@@ -4021,8 +4027,12 @@ boolean CaptureBall(byte ballswitchnum) {
         NextBall = NextBallCheck;
         NextBallTime = CurrentTime;
 
-        // CFTBL - Try Next Ball Sounds 06-19-2026
-        intToBitArray(NextBall, bitArray);
+        // CFTBL - Play Next Ball Callout 06-23-2026
+        actualNextBall = NextBall;
+        if (CurrentPlayer == 2 || CurrentPlayer == 4) {
+          actualNextBall = NextBall + 8;
+        }
+        intToBitArray(actualNextBall, bitArray);
         writeBitArrayToOutputPins(bitArray);
 
  
