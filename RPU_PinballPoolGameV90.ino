@@ -1012,11 +1012,12 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     //Serial.println(F("--InitNewBall, ball still in outhole--"));
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
-    // CFTBL - Play new ball tune here unless it is the first ball and first player 06-21-2026
-    if (ballNum != 1 && playerNum !=1) {
+    // CFTBL - Play delayed new ball tune elsewhere if it is the first ball and first player otherwise play non-delayed 06-23-2026
+    if (ballNum == 1 && playerNum == 1) {}
+    else {
       intToBitArray(RagtimePiano, bitArray);
       writeBitArrayToOutputPins(bitArray);
-    }  
+    }
     return MACHINE_STATE_NORMAL_GAMEPLAY;
     
   }
