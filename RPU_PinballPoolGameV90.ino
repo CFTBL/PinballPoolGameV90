@@ -4029,7 +4029,7 @@ boolean CaptureBall(byte ballswitchnum) {
 
         // CFTBL - Play Next Ball Callout 06-23-2026
         actualNextBall = NextBall;
-        if (CurrentPlayer == 2 || CurrentPlayer == 4) {
+        if (CurrentPlayer == 1 || CurrentPlayer == 3) {
           actualNextBall = NextBall + 8;
         }
         intToBitArray(actualNextBall, bitArray);
