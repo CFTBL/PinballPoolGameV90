@@ -47,6 +47,8 @@
 //	31	00011111	0	0	0	1	1	1	1	1	  Three Goals Achieved
 //	32	00100000	0	0	1	0	0	0	0	0	  Five Goals Achieved
 //	33	00100000	0	0	1	0	0	0	0	1	  Ragtime Piano Delayed 3 Seconds
+//	34	00100010	0	0	1	0	0	0	1 0	  Spinner Advanced Again
+//	35	00100011	0	0	1	0	0	0	1	1	  Pop Bumpers Advanced
 
 //======================================================
 // CFTBL - Super WAV Trigger Wiring
@@ -135,6 +137,8 @@ const int OneGoalAchieved = 30;
 const int ThreeGoalsAchieved = 31;
 const int FiveGoalsAchieved = 32;
 const int RagtimePianoDelayed = 33;
+const int SpinnerAdvancedAgain = 34;
+const int PopBumpersAdvanced = 35;
 
 // MachineState
 //  0 - Attract Mode
@@ -2984,6 +2988,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               PlaySoundEffect(SOUND_EFFECT_SCRAMBLE_BALL, true);
             }
             // CFTBL - Play Mode Fanfare 06-22-2026
+            intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
+            // CFTBL - Play Scramble Mode Callout 06-23-2026
             intToBitArray(ModeFanfare, bitArray);
             writeBitArrayToOutputPins(bitArray);
             SetGoals(6);                                      // Set goal as completed
