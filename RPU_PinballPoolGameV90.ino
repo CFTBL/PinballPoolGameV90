@@ -1015,15 +1015,6 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     //Serial.println(F("--InitNewBall, ball still in outhole--"));
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
-    // CFTBL - Play delayed new ball tune elsewhere if it is the first ball and first player otherwise play non-delayed 06-23-2026
-    if (ballNum != 1 && playerNum != 0) {
-      intToBitArray(RagtimePiano, bitArray);
-      writeBitArrayToOutputPins(bitArray);
-    }
-    if (playerNum >= 1 && playerNum <= 3) {
-      intToBitArray(RagtimePiano, bitArray);
-      writeBitArrayToOutputPins(bitArray);
-    }
     return MACHINE_STATE_NORMAL_GAMEPLAY;
     
   }
@@ -2768,6 +2759,13 @@ int InitGamePlay(boolean curStateChanged) {   //zzzzz
   if (ChimeTrigger) {
     ChimeTrigger = false;
     PlaySoundEffect(SOUND_EFFECT_GAME_START, true);
+    // CFTBL - Play shooter lane tune here for first ball first player 06-23-2026
+    intToBitArray(RagtimePianoDelayed, bitArray);
+    writeBitArrayToOutputPins(bitArray);
+  } else {
+    // CFTBL - Play shooter lane tune here for other than first ball first player 06-23-2026
+    intToBitArray(RagtimePiano, bitArray);
+    writeBitArrayToOutputPins(bitArray);
   }
 
   // Wait for TIME_TO_WAIT_FOR_BALL seconds, or until the ball appears
@@ -4744,9 +4742,6 @@ unsigned long TimeStart;
       RPU_PushToTimedSolenoidStack(SOL_CHIME_100, 3, TimeStart + 2246);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_10, 3, TimeStart + 2413);
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart + 2579);
-      // CFTBL - Play shooter lane tune here for first ball first player 06-21-2026
-      intToBitArray(RagtimePianoDelayed, bitArray);
-      writeBitArrayToOutputPins(bitArray);
       break;
     case SOUND_EFFECT_EXTRA_BALL:
       RPU_PushToTimedSolenoidStack(SOL_CHIME_EXTRA, 3, TimeStart, true);
