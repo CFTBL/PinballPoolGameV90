@@ -1016,11 +1016,11 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
     // CFTBL - Play delayed new ball tune elsewhere if it is the first ball and first player otherwise play non-delayed 06-23-2026
-    if (ballNum != 1 && playerNum != 1) {
+    if (ballNum != 1 && playerNum != 0) {
       intToBitArray(RagtimePiano, bitArray);
       writeBitArrayToOutputPins(bitArray);
     }
-    if (playerNum >= 2 && playerNum <= 4) {
+    if (playerNum >= 1 && playerNum <= 3) {
       intToBitArray(RagtimePiano, bitArray);
       writeBitArrayToOutputPins(bitArray);
     }
