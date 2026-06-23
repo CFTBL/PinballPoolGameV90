@@ -936,8 +936,8 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         // CFTBL - Play Mode Fanfare 06-22-2026
         intToBitArray(ModeFanfare, bitArray);
         writeBitArrayToOutputPins(bitArray);                            // Wipe out all collected balls, set SuperBonus
-        // CFTBL - Play Mode Fanfare 06-22-2026
-        intToBitArray(ModeFanfare, bitArray);
+        // CFTBL - Play Super Bonus callout 06-23-2026
+        intToBitArray(SuperBonusReady, bitArray);
         writeBitArrayToOutputPins(bitArray);
         SetGoals(1);                                              // Duplicate of above
         EightBallTest[CurrentPlayer] = true;                      // Reset to enable getting 8 ball again
@@ -2991,7 +2991,7 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             intToBitArray(ModeFanfare, bitArray);
             writeBitArrayToOutputPins(bitArray);
             // CFTBL - Play Scramble Mode Callout 06-23-2026
-            intToBitArray(ModeFanfare, bitArray);
+            intToBitArray(ScrambleBall, bitArray);
             writeBitArrayToOutputPins(bitArray);
             SetGoals(6);                                      // Set goal as completed
             //NextBall = 0;                                     // Cancel NextBall in case active
@@ -3168,6 +3168,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             // CFTBL - Play Mode Fanfare 06-22-2026
             intToBitArray(ModeFanfare, bitArray);
             writeBitArrayToOutputPins(bitArray);
+            // CFTBL - Play Spinner Advanced callout 06-23-2026
+            intToBitArray(SpinnerAdvanced, bitArray);
+            writeBitArrayToOutputPins(bitArray);
             SetGoals(4);
             SpinnerCount[CurrentPlayer] = 0;
             if (SpinnerMode[CurrentPlayer] > 1) {
@@ -3200,6 +3203,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             PlaySoundEffect(SOUND_EFFECT_SPINNER_COMBO, true);
             // CFTBL - Play Mode Fanfare 06-22-2026
             intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
+            // CFTBL - Play Spinner Combo callout 06-23-2026
+            intToBitArray(SpinnerAdvancedAgain, bitArray);
             writeBitArrayToOutputPins(bitArray);
             SetGoals(5);
           }
@@ -3329,6 +3335,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (PopCount[CurrentPlayer] > (Pop_Threshold-1)) {
             // CFTBL - Play Mode Fanfare 06-22-2026
             intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
+            // CFTBL - Play Pop Bumpers Advanced callout 06-23-2026
+            intToBitArray(PopBumpersAdvanced, bitArray);
             writeBitArrayToOutputPins(bitArray);
             PopMode[CurrentPlayer] += 1;
             SetGoals(3);
@@ -3976,6 +3985,9 @@ boolean CaptureBall(byte ballswitchnum) {
         //PlaySoundEffect(SOUND_EFFECT_5K_CHIME, true);
         // CFTBL - Play Mode Fanfare 06-22-2026
         intToBitArray(ModeFanfare, bitArray);
+        writeBitArrayToOutputPins(bitArray);
+        // CFTBL - Play Next Ball Collected callout 06-23-2026
+        intToBitArray(NextBallCollected, bitArray);
         writeBitArrayToOutputPins(bitArray);
         SetGoals(2);
         // If AlleyMode not running, remove flashing lamp per normal.  If AlleyMode is running it already cleared out
