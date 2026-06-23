@@ -65,7 +65,8 @@
 //        D37       D37
 //        D38       D38
 //        D39       D39
-//        D40       D40
+//        D40       D40     pinTxReady
+//        D41       D41     pinRxAck
 //                  TX1     RX via 1K resistor
 //                  GND     RX via 2K Resistor
 //
@@ -86,8 +87,9 @@
 #define USE_SCORE_OVERRIDES
 #define USE_SCORE_ACHIEVEMENTS
 
-// CFTBL - Strobe pin will tell the slave Arduino to read a command 06-18-2026
-#define STROBE_PIN 40
+// CFTBL - Pins 40 and 41 are for handshaking 06-23-2026
+const int pinTxReady = 40; // Output to Listener
+const int pinRxAck   = 41; // Input from Listener
 
 // CFTBL - bitArray will contain the command being sent to the slave Arduino 06-18-2026
 bool bitArray[8] = {0,0,0,0,0,0,0,0};
@@ -488,8 +490,9 @@ void setup() {
     Serial.begin(115200);
   }
 
-  // CFTBL - Set Strobe output pin 06-18-2026
-  pinMode(STROBE_PIN, OUTPUT);
+  // CFTBL - Set up my handshaking pins 06-23-2026
+  pinMode(pinTxReady, OUTPUT);
+  pinMode(pinRxAck, INPUT);
    
   // CFTBL - Set all the output pins, 39 through 32 as outputs 06-18-2026
   for (int i = 0; i < 8; i++) {
@@ -499,8 +502,8 @@ void setup() {
   // CFTBL - Let things settle down 06-18-2026
   delay(3000);
     
-  // CFTBL - Reset Strobe Pin (1 is Inactive) 06-18-2026
-  digitalWrite(STROBE_PIN, 1);
+  // CFTBL - Reset TxReady Pin (HIGH is Inactive) 06-23-2026
+  digitalWrite(pinTxReady, HIGH);
 
   // CFTBL - Write zeros to all the output pins 06-18-2026
   for (int i = 0; i < 8; i++) {
@@ -567,15 +570,24 @@ void intToBitArray(uint8_t num, bool bits[8]) {
   }
 }
 
-// CFTBL - This function sends a binary sound command to the slave Arduino 06-18-24
+// CFTBL - This function sends a binary sound command to the slave Arduino 06-23-24
 void writeBitArrayToOutputPins(bool bits[8]) {
+  while (digitalRead(pinRxAck) == LOW) {} // Wait until listener is ready
 
   for (int i = 0; i < 8; i++) {
     digitalWrite(pinArray[i], bits[i]);
   }
-  digitalWrite(STROBE_PIN, LOW);
-  delay(100);
-  digitalWrite(STROBE_PIN, HIGH);
+
+  // CFTBL - Tiny pause to let voltages settle 06-23-2026
+  delayMicroseconds(5);
+  
+// CFTBL - Data is ready 06-23-2026
+  digitalWrite(pinTxReady, LOW);
+  
+  while (digitalRead(pinRxAck) == HIGH) {} // CFTBL - Wait for acknowledgement 06-23-2026
+  
+  // CFTBL - Deactivate the Ready line
+  digitalWrite(pinTxReady, HIGH);
 }
 
 void ReadStoredParameters() {
