@@ -913,7 +913,13 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
       }
       if ((Balls[CurrentPlayer] & (0b1<<7)) == 128) {             // If 8 ball collected, we have achieved SuperBonus
         RPU_SetLampState(LA_SUPER_BONUS, 1);                      // Turn on SuperBonus lamp
-        Balls[CurrentPlayer] = 0x8000;                            // Wipe out all collected balls, set SuperBonus
+        Balls[CurrentPlayer] = 0x8000;
+        // CFTBL - Play Mode Fanfare 06-22-2026
+        intToBitArray(ModeFanfare, bitArray);
+        writeBitArrayToOutputPins(bitArray);                            // Wipe out all collected balls, set SuperBonus
+        // CFTBL - Play Mode Fanfare 06-22-2026
+        intToBitArray(ModeFanfare, bitArray);
+        writeBitArrayToOutputPins(bitArray);
         SetGoals(1);                                              // Duplicate of above
         EightBallTest[CurrentPlayer] = true;                      // Reset to enable getting 8 ball again
         if (!OutlaneSpecial[CurrentPlayer]) {                     // Achieving SuperBonus turns on Outlane Special
@@ -2960,6 +2966,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             if (!(Goals[CurrentPlayer] & (0b1<<5))) {         // If Goal 6 not set
               PlaySoundEffect(SOUND_EFFECT_SCRAMBLE_BALL, true);
             }
+            // CFTBL - Play Mode Fanfare 06-22-2026
+            intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
             SetGoals(6);                                      // Set goal as completed
             //NextBall = 0;                                     // Cancel NextBall in case active
             //NextBallTime = 0;
@@ -3132,6 +3141,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (SpinnerCount[CurrentPlayer] > (Spinner_Threshold - 1)) {
             PlaySoundEffect(SOUND_EFFECT_BALL_OVER, true);            // Plays each increment
             SpinnerMode[CurrentPlayer] += 1;
+            // CFTBL - Play Mode Fanfare 06-22-2026
+            intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
             SetGoals(4);
             SpinnerCount[CurrentPlayer] = 0;
             if (SpinnerMode[CurrentPlayer] > 1) {
@@ -3162,6 +3174,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             SuperSpinnerDuration = 0;
             Silent_Thousand_Pts_Stack +=25;
             PlaySoundEffect(SOUND_EFFECT_SPINNER_COMBO, true);
+            // CFTBL - Play Mode Fanfare 06-22-2026
+            intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
             SetGoals(5);
           }
           if ( (SpinnerCount[CurrentPlayer] > (Spinner_Threshold - (Spinner_Threshold*.66))) && (SpinnerCount[CurrentPlayer] < Spinner_Threshold) ) {
@@ -3288,13 +3303,13 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
         case SW_BUMPER_LEFT:
           PopCount[CurrentPlayer] = ++PopCount[CurrentPlayer];
           if (PopCount[CurrentPlayer] > (Pop_Threshold-1)) {
+            // CFTBL - Play Mode Fanfare 06-22-2026
+            intToBitArray(ModeFanfare, bitArray);
+            writeBitArrayToOutputPins(bitArray);
             PopMode[CurrentPlayer] += 1;
             SetGoals(3);
             PopCount[CurrentPlayer] = 0;
             PlaySoundEffect(SOUND_EFFECT_POP_MODE, true);
-            // CFTBL - Play Mode Fanfare 06-22-2026
-            intToBitArray(ModeFanfare, bitArray);
-            writeBitArrayToOutputPins(bitArray);
           }
           #ifdef EXECUTION_MESSAGES
           Serial.print(F("PopMode is:  "));
@@ -3935,6 +3950,9 @@ boolean CaptureBall(byte ballswitchnum) {
         Silent_Thousand_Pts_Stack +=5;                                        // Award additional NextBall score
         nextSound = SOUND_EFFECT_5K_CHIME;
         //PlaySoundEffect(SOUND_EFFECT_5K_CHIME, true);
+        // CFTBL - Play Mode Fanfare 06-22-2026
+        intToBitArray(ModeFanfare, bitArray);
+        writeBitArrayToOutputPins(bitArray);
         SetGoals(2);
         // If AlleyMode not running, remove flashing lamp per normal.  If AlleyMode is running it already cleared out
         // flashing in alleys 1-4 so only clear 5-7.
