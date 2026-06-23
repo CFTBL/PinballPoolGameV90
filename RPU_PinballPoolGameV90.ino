@@ -1020,7 +1020,7 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
       intToBitArray(RagtimePiano, bitArray);
       writeBitArrayToOutputPins(bitArray);
     }
-    if (ballNum == 1 && (playerNum >= 2 && playerNum <= 4)) {
+    if (playerNum >= 2 && playerNum <= 4) {
       intToBitArray(RagtimePiano, bitArray);
       writeBitArrayToOutputPins(bitArray);
     }
@@ -4027,14 +4027,13 @@ boolean CaptureBall(byte ballswitchnum) {
         NextBall = NextBallCheck;
         NextBallTime = CurrentTime;
 
-        // CFTBL - Play Next Ball Callout 06-23-2026
+        // CFTBL - Play Next Ball Callout (player numbering starts with 0) 06-23-2026
         actualNextBall = NextBall;
         if (CurrentPlayer == 1 || CurrentPlayer == 3) {
           actualNextBall = NextBall + 8;
         }
         intToBitArray(actualNextBall, bitArray);
         writeBitArrayToOutputPins(bitArray);
-
  
         // If here NextBall is valid, offset switchnum down by one for lamp number
         // Start lamp flashing, note end state is on, only allowed for lanes 5-7 when AlleyMode is running
