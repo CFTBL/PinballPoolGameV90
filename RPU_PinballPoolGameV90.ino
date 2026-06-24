@@ -1024,6 +1024,11 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     //Serial.println(F("--InitNewBall, ball still in outhole--"));
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
+    // CFTBL - Queue piano tune at start of each new ball except player 1 ball 1
+    CommandTime = millis();
+    CommandQueued = true;
+    CommandDelay = 500;
+    Command = RagtimePiano;
     return MACHINE_STATE_NORMAL_GAMEPLAY;
     
   }
@@ -2771,7 +2776,7 @@ int InitGamePlay(boolean curStateChanged) {   //zzzzz
     // CFTBL - Play shooter lane tune here for first ball first player 06-23-2026
     CommandTime = millis();
     CommandQueued = true;
-    CommandDelay = 3000;
+    CommandDelay = 3079;
     Command = RagtimePiano;
   }
 
