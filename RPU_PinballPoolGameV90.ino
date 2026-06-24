@@ -269,6 +269,11 @@ unsigned long CurrentTime = 0;
 unsigned long BallTimeInTrough = 0;
 unsigned long BallFirstSwitchHitTime = 0;
 
+unsigned long CommandTime = 0;
+boolean CommandQueued = false;
+int CommandDelay = 0;
+int Command = 0;
+
 boolean BallSaveUsed = false;
 #define BALLSAVENUMSECONDS_MAX   20
 #define BALLSAVENUMSECONDS_DEF    0
@@ -2764,8 +2769,10 @@ int InitGamePlay(boolean curStateChanged) {   //zzzzz
     ChimeTrigger = false;
     PlaySoundEffect(SOUND_EFFECT_GAME_START, true);
     // CFTBL - Play shooter lane tune here for first ball first player 06-23-2026
-    intToBitArray(RagtimePianoDelayed, bitArray);
-    writeBitArrayToOutputPins(bitArray);
+    unsigned long CommandTime = millis();
+    boolean CommandQueued = true;
+    CommandDelay = 3000;
+    Command = RagtimePiano;
   }
 
   // Wait for TIME_TO_WAIT_FOR_BALL seconds, or until the ball appears
@@ -3442,6 +3449,15 @@ void loop() {
   RPU_DataRead(0);
 
   CurrentTime = millis();
+
+  // CFTBL - Process queued sound 06-23-2026
+  if (CommandQueued == true) {
+    if ((CurrentTime - CommandTime) > CommandDelay) {
+      CommandQueued = false;
+      intToBitArray(Command, bitArray);
+      writeBitArrayToOutputPins(bitArray);
+    }
+  }
   int newMachineState = MachineState;
 
   // Machine state is self-test/attract/game play
