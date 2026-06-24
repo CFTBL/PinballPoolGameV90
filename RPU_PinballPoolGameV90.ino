@@ -2766,10 +2766,6 @@ int InitGamePlay(boolean curStateChanged) {   //zzzzz
     // CFTBL - Play shooter lane tune here for first ball first player 06-23-2026
     intToBitArray(RagtimePianoDelayed, bitArray);
     writeBitArrayToOutputPins(bitArray);
-  } else {
-    // CFTBL - Play shooter lane tune here for other than first ball first player 06-23-2026
-    intToBitArray(RagtimePiano, bitArray);
-    writeBitArrayToOutputPins(bitArray);
   }
 
   // Wait for TIME_TO_WAIT_FOR_BALL seconds, or until the ball appears
