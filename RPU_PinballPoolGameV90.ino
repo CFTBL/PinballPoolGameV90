@@ -2769,8 +2769,8 @@ int InitGamePlay(boolean curStateChanged) {   //zzzzz
     ChimeTrigger = false;
     PlaySoundEffect(SOUND_EFFECT_GAME_START, true);
     // CFTBL - Play shooter lane tune here for first ball first player 06-23-2026
-    unsigned long CommandTime = millis();
-    boolean CommandQueued = true;
+    CommandTime = millis();
+    CommandQueued = true;
     CommandDelay = 3000;
     Command = RagtimePiano;
   }
@@ -3452,7 +3452,7 @@ void loop() {
 
   // CFTBL - Process queued sound 06-23-2026
   if (CommandQueued == true) {
-    if ((CurrentTime - CommandTime) > CommandDelay) {
+    if ((CurrentTime - CommandTime) >= CommandDelay) {
       CommandQueued = false;
       intToBitArray(Command, bitArray);
       writeBitArrayToOutputPins(bitArray);
