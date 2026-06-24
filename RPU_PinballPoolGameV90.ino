@@ -1047,7 +1047,7 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         Command = AllGoalsAchieved;
         break;
       default:
-        Command = RagtimePiano;
+        Command = OneGoalAchieved;
         break;  
       }
     
