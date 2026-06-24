@@ -97,7 +97,7 @@ const int pinRxAck   = 41; // Input from Listener
 int actualNextBall;
 
 // CFTBL - Goals Achieved 06-24-2026
-int goalsAchieved = 0;
+int goalsAchieved;
 
 // CFTBL - bitArray will contain the command being sent to the slave Arduino 06-18-2026
 bool bitArray[8] = {0,0,0,0,0,0,0,0};
@@ -1027,6 +1027,7 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
     // CFTBL - Count goals achieved 06-24-2026  
+    goalsAchieved = 0;
     for (int i = 0; i < 6; i++) {
       if (bitRead(Goals[CurrentPlayer], i)) {
         goalsAchieved++;
@@ -1056,7 +1057,7 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         Command = AllGoalsAchieved;
         break;
       default:
-        Command = OneGoalAchieved;
+        Command = RagtimePiano;
         break;  
       }
     
