@@ -1027,32 +1027,30 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     CommandTime = millis();
     CommandQueued = true;
     CommandDelay = 500;
-    Command = RagtimePiano;
-    if (Goals[CurrentPlayer] != 0){
-      switch (Goals[CurrentPlayer]) {
-        case 1:
-          Command = OneGoalAchieved;
-          break;
-        case 2:
-          Command = TwoGoalsAchieved;
-          break;
-        case 3:
-          Command = ThreeGoalsAchieved;
-          break;
-        case 4:
-          Command = FourGoalsAchieved;
-          break;
-        case 5:
-          Command = FiveGoalsAchieved;
-          break;
-        case 6:
-          Command = AllGoalsAchieved;
-          break;
-        default:
-          Command = RagtimePiano;
-          break;  
+    switch (GoalsDisplayValue(Goals[CurrentPlayer])) {
+      case 1:
+        Command = OneGoalAchieved;
+        break;
+      case 2:
+        Command = TwoGoalsAchieved;
+        break;
+      case 3:
+        Command = ThreeGoalsAchieved;
+        break;
+      case 4:
+        Command = FourGoalsAchieved;
+        break;
+      case 5:
+        Command = FiveGoalsAchieved;
+        break;
+      case 6:
+        Command = AllGoalsAchieved;
+        break;
+      default:
+        Command = RagtimePiano;
+        break;  
       }
-    }
+    
     return MACHINE_STATE_NORMAL_GAMEPLAY;
   }
   
