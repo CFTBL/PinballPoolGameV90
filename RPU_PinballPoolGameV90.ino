@@ -1023,13 +1023,37 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     //Serial.println(F("--InitNewBall, ball still in outhole--"));
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
-    // CFTBL - Queue piano tune at start of each new ball except player 1 ball 1
+    // CFTBL - Queue piano tune at start of each new ball
     CommandTime = millis();
     CommandQueued = true;
     CommandDelay = 500;
     Command = RagtimePiano;
+    if (Goals[CurrentPlayer] != 0){
+      switch (Goals[CurrentPlayer]) {
+        case 1:
+          Command = OneGoalAchieved;
+          break;
+        case 2:
+          Command = TwoGoalsAchieved;
+          break;
+        case 3:
+          Command = ThreeGoalsAchieved;
+          break;
+        case 4:
+          Command = FourGoalsAchieved;
+          break;
+        case 5:
+          Command = FiveGoalsAchieved;
+          break;
+        case 6:
+          Command = AllGoalsAchieved;
+          break;
+        default:
+          Command = RagtimePiano;
+          break;  
+      }
+    }
     return MACHINE_STATE_NORMAL_GAMEPLAY;
-    
   }
   
 }
@@ -3169,7 +3193,7 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             // CFTBL - Play Spinner Advanced callout 06-23-2026
             CommandTime = millis();
             CommandQueued = true;
-            CommandDelay = 500;
+            CommandDelay = 1775;
             Command = SpinnerAdvanced;
             SetGoals(4);
             SpinnerCount[CurrentPlayer] = 0;
@@ -3204,7 +3228,7 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             // CFTBL - Play Spinner Combo callout 06-23-2026
             CommandTime = millis();
             CommandQueued = true;
-            CommandDelay = 500;
+            CommandDelay = 1805;
             Command = SpinnerAdvancedAgain;
             SetGoals(5);
           }
@@ -3335,7 +3359,7 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             // CFTBL - Play Pop Bumpers Advanced callout 06-23-2026
             CommandTime = millis();
             CommandQueued = true;
-            CommandDelay = 500;
+            CommandDelay = 2275;
             Command = PopBumpersAdvanced;
             PopMode[CurrentPlayer] += 1;
             SetGoals(3);
