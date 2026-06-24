@@ -2992,7 +2992,7 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             // CFTBL - Play Scramble Mode Callout 06-23-2026
             CommandTime = millis();
             CommandQueued = true;
-            CommandDelay = 500;
+            CommandDelay = 1550;
             Command = ScrambleBall;
             SetGoals(6);                                      // Set goal as completed
             //NextBall = 0;                                     // Cancel NextBall in case active
@@ -3993,7 +3993,7 @@ boolean CaptureBall(byte ballswitchnum) {
         // CFTBL - Play Next Ball Collected callout 06-23-2026
         CommandTime = millis();
         CommandQueued = true;
-        CommandDelay = 500;
+        CommandDelay = 1300;
         Command = NextBallCollected;
         SetGoals(2);
         // If AlleyMode not running, remove flashing lamp per normal.  If AlleyMode is running it already cleared out
