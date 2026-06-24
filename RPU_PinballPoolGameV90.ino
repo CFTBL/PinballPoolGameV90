@@ -1036,7 +1036,7 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     // CFTBL - Queue goal callout and piano tune at start of each new ball
     CommandTime = millis();
     CommandQueued = true;
-    CommandDelay = 500;
+    CommandDelay = 100;
     switch (goalsAchieved) {
       case 1:
         Command = OneGoalAchieved;
