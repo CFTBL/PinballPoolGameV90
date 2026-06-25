@@ -593,8 +593,8 @@ void writeBitArrayToOutputPins(bool bits[8]) {
     digitalWrite(pinArray[i], bits[i]);
   }
 
-  // CFTBL - Tiny pause to let voltages settle 06-23-2026
-  delayMicroseconds(5);
+  // CFTBL - Pause to let voltages settle 06-23-2026
+  delayMicroseconds(10);
   
 // CFTBL - Data is ready 06-23-2026
   digitalWrite(pinTxReady, LOW);
