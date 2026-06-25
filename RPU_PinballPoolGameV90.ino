@@ -594,7 +594,7 @@ void writeBitArrayToOutputPins(bool bits[8]) {
   }
 
   // CFTBL - Pause to let voltages settle 06-23-2026
-  delayMicroseconds(10);
+  delayMicroseconds(5);
   
 // CFTBL - Data is ready 06-23-2026
   digitalWrite(pinTxReady, LOW);
@@ -1038,6 +1038,9 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     CommandQueued = true;
     CommandDelay = 500;
     switch (goalsAchieved) {
+      case 0:
+        Command = RagtimePiano;
+        break;
       case 1:
         Command = OneGoalAchieved;
         break;
@@ -1055,10 +1058,7 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         break;
       case 6:
         Command = AllGoalsAchieved;
-        break;
-      default:
-        Command = RagtimePiano;
-        break;  
+        break; 
       }
     
     return MACHINE_STATE_NORMAL_GAMEPLAY;
