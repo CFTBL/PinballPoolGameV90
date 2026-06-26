@@ -3364,12 +3364,15 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
         case SW_BUMPER_LEFT:
           PopCount[CurrentPlayer] = ++PopCount[CurrentPlayer];
           if (PopCount[CurrentPlayer] > (Pop_Threshold-1)) {
-            // CFTBL - Play Pop Bumpers Advanced callout 06-23-2026
+            PopMode[CurrentPlayer] += 1;
+            // CFTBL - Play Pop Bumpers Advanced or Pop Bumpers Advanced Again callout 06-26-2026
             CommandTime = millis();
             CommandQueued = true;
             CommandDelay = 2275;
             Command = PopBumpersAdvanced;
-            PopMode[CurrentPlayer] += 1;
+            if (PopMode[CurrentPlayer] > 1) {
+              Command = PopBumpersAdvancedAgain;
+            }
             SetGoals(3);
             PopCount[CurrentPlayer] = 0;
             PlaySoundEffect(SOUND_EFFECT_POP_MODE, true);
