@@ -12,43 +12,85 @@
 //
 // CFTBL - Add Super WAV Trigger Sounds 06-18-2026
 //======================================================
-// Num  Binary	  D39          D32  Command
-//	0	  00000000	0	0	0	0	0	0	0	0	  Stop
-//	1	  00000001	0	0	0	0	0	0	0	1	  Ragtime Piano
-//	2	  00000010	0	0	0	0	0	0	1	0	  Shoot the Two
-//	3	  00000011	0	0	0	0	0	0	1	1	  Shoot the Three
-//	4	  00000100	0	0	0	0	0	1	0	0	  Shoot the Four
-//	5	  00000101	0	0	0	0	0	1	0	1	  Shoot the Five
-//	6	  00000110	0	0	0	0	0	1	1	0	  Shoot the Six
-//	7	  00000111	0	0	0	0	0	1	1	1	  Shoot the Seven
-//	8	  00001000	0	0	0	0	1	0	0	0	  Get the Eight Ball
-//	9	  00001001	0	0	0	0	1	0	0	1	  Shoot the Nine
-//	10	00001010	0	0	0	0	1	0	1	0	  Shoot the Ten
-//	11	00001011	0	0	0	0	1	0	1	1	  Shoot the Eleven
-//	12	00001100	0	0	0	0	1	1	0	0	  Shoot the Twelve
-//	13	00001101	0	0	0	0	1	1	0	1	  Shoot the Thirteen
-//	14	00001110	0	0	0	0	1	1	1	0	  Shoot the Fourteen
-//	15	00001111	0	0	0	0	1	1	1	1	  Shoot the Fifteen
-//	16	00010000	0	0	0	1	0	0	0	0	  Eight Ball Collected
-//	17	00010001	0	0	0	1	0	0	0	1	  Super Bonus Lit
-//	18	00010010	0	0	0	1	0	0	0	1	  Stop Track One
-//	19	00010011	0	0	0	1	0	0	1	1	  Pops
-//	20	00010100	0	0	0	1	0	1	0	0	  Ball Drain
-//	21	00010101	0	0	0	1	0	1	0	1	  Mode Fanfare
-//	22	00010110	0	0	0	1	0	1	1	0	  Next Ball Collected
-//	23	00010111	0	0	0	1	0	1	1	1	  Spinner Advanced
-//	24	00011000	0	0	0	1	1	0	0	0	  Scramble Ball
-//	25	00011001	0	0	0	1	1	0	0	1	  Roaming Ball
-//	26	00011010	0	0	0	1	1	0	1	0	  Alley Mode
-//	27	00011011	0	0	0	1	1	0	1	1	  Two Goals Achieved
-//	28	00011100	0	0	0	1	1	1	0	0	  Four Goals Achieved
-//	29	00011101	0	0	0	1	1	1	0	1	  All Goals Achieved
-//	30	00011110	0	0	0	1	1	1	1	0	  One Goal Achieved
-//	31	00011111	0	0	0	1	1	1	1	1	  Three Goals Achieved
-//	32	00100000	0	0	1	0	0	0	0	0	  Five Goals Achieved
-//	33	00100000	0	0	1	0	0	0	0	1	  Ragtime Piano Delayed 3 Seconds
-//	34	00100010	0	0	1	0	0	0	1 0	  Spinner Advanced Again
-//	35	00100011	0	0	1	0	0	0	1	1	  Pop Bumpers Advanced
+// 00 Stop
+// 01 Ragtime Piano
+// 02 Shoot the Two
+// 03 Shoot the Three
+// 04 Shoot the Four
+// 05 Shoot the Five
+// 06 Shoot the Six
+// 07 Shoot the Seven
+// 08 Get the Eight Ball
+// 09 Shoot the Nine
+// 10 Shoot the Ten
+// 11 Shoot the Eleven
+// 12 Shoot the Twelve
+// 13 Shoot the Thirteen
+// 14 Shoot the Fourteen
+// 15 Shoot the Fifteen
+// 16 Eight Ball Collected
+// 17 Super Bonus Lit (1 chime)
+// 18 Stop Track One
+// 19 Pops
+// 20 Ball Drain
+// 21 Mode Fanfare
+// 22 Next Ball Collected (1 chime)
+// 23 Spinner Advanced (1 chime)
+// 24 Scramble Ball (1 chime)
+// 25 Roaming Ball
+// 26 Alley Mode
+// 27 Two Goals Achieved
+// 28 Four Goals Achieved
+// 29 All Goals Achieved
+// 30 One Goal Achieved
+// 31 Three Goals Achieved
+// 32 Five Goals Achieved
+// 33 Ragtime Piano Delayed 3 Seconds
+// 34 Spinner Combo (1 chime)
+// 35 Pop Bumpers Advanced (1 chime)
+// 36 Pop Bumpers Advanced Again
+// 37 Make the Bankshot. Hurry!
+// 38 Shoot the spinner. Hurry!
+// 39 Scramble Ball Ready
+// 40 Shoot the roaming ball. Hurry!
+// 41 Well done! Let's play fifteen ball!
+// 42 Alley mode. Shoot the Top lanes. Hurry!
+// 43 Next Ball Collected (2 chimes)
+// 44 Next Ball Collected (3 chimes)
+// 45 Next Ball Collected (4 chimes)
+// 46 Next Ball Collected (5 chimes)
+// 47 Next Ball Collected (6 chimes)
+// 48 Super Bonus Lit (2 chimes)
+// 49 Super Bonus Lit (3 chimes)
+// 50 Super Bonus Lit (4 chimes)
+// 51 Super Bonus Lit (5 chimes)
+// 52 Super Bonus Lit (6 chimes)
+// 53 Pop Bumpers Advanced (2 chimes)
+// 54 Pop Bumpers Advanced (3 chimes)
+// 55 Pop Bumpers Advanced (4 chimes)
+// 56 Pop Bumpers Advanced (5 chimes)
+// 57 Pop Bumpers Advanced (6 chimes)
+// 58 Spinner Advanced (2 chimes)
+// 59 Spinner Advanced (3 chimes)
+// 60 Spinner Advanced (4 chimes)
+// 61 Spinner Advanced (5 chimes)
+// 62 Spinner Advanced (6 chimes)
+// 63 Spinner Combo (2 chimes)
+// 64 Spinner Combo (3 chimes)
+// 65 Spinner Combo (4 chimes)
+// 66 Spinner Combo (5 chimes)
+// 67 Spinner Combo (6 chimes)
+// 68 Scramble Ball (2 chimes)
+// 69 Scramble Ball (3 chimes)
+// 70 Scramble Ball (4 chimes)
+// 71 Scramble Ball (5 chimes)
+// 72 Scramble Ball (6 chimes)
+
+
+
+
+
+
 
 //======================================================
 // CFTBL - Super WAV Trigger Wiring
