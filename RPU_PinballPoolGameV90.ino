@@ -54,6 +54,9 @@ const int pinRxAck   = 41; // Input from Listener
 // CFTBL - Actual Next Ball
 int actualNextBall;
 
+// CFTBL - Flag to check 7/15 switch
+bool hit715;
+
 // CFTBL - Goals Achieved 06-24-2026
 int goalsAchieved;
 
@@ -3087,6 +3090,8 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           }
           break;
         case SW_7_15_BALL:
+          // CFTBL - Set flag if 7-15 switch is hit
+          hit715 = 1;
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
           if (!CaptureBall(7)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
@@ -4237,17 +4242,20 @@ boolean CaptureBall(byte ballswitchnum) {
         NextBall = NextBallCheck;
         NextBallTime = CurrentTime;
 
-        // CFTBL - Play Next Ball Callout (player numbering starts with 0) 06-23-2026
-        actualNextBall = NextBall;
-        if (CurrentPlayer == 1 || CurrentPlayer == 3) {
-          actualNextBall = NextBall + 8;
+        // CFTBL - Play Next Ball Callout but skip if 7/15 was the switch (player numbering starts with 0) 06-27-2026
+        if (hit715 == 0){
+          actualNextBall = NextBall;
+          if (CurrentPlayer == 1 || CurrentPlayer == 3) {
+            actualNextBall = NextBall + 8;
+          }
+          if (CommandQueued == false) {
+            CommandTime = millis();
+            CommandQueued = true;
+            CommandDelay = 500;
+            Command = actualNextBall;
+          }
         }
-        if (CommandQueued == false) {
-          CommandTime = millis();
-          CommandQueued = true;
-          CommandDelay = 500;
-          Command = actualNextBall;
-        }
+        hit715 = 0;
  
         // If here NextBall is valid, offset switchnum down by one for lamp number
         // Start lamp flashing, note end state is on, only allowed for lanes 5-7 when AlleyMode is running
