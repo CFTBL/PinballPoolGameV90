@@ -3047,7 +3047,33 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             CommandTime = millis();
             CommandQueued = true;
             CommandDelay = 1550;
-            Command = ScrambleBall;
+            // CFTBL - Count goals achieved 06-26-2026  
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = ScrambleBall;
+                break;
+              case 1:
+                Command = ScrambleBall2Chimes;
+                break;
+              case 2:
+                Command = ScrambleBall3Chimes;
+                break;
+              case 3:
+                Command = ScrambleBall4Chimes;
+                break;
+              case 4:
+                Command = ScrambleBall5Chimes;
+                break;
+              case 5:
+                Command = ScrambleBall6Chimes;
+                break;
+            } 
             SetGoals(6);                                      // Set goal as completed
             //NextBall = 0;                                     // Cancel NextBall in case active
             //NextBallTime = 0;
@@ -3224,7 +3250,33 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             CommandTime = millis();
             CommandQueued = true;
             CommandDelay = 1775;
-            Command = SpinnerAdvanced;
+            // CFTBL - Add appropriate number of chimes before voice callout
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = SpinnerAdvanced;
+                break;
+              case 1:
+                Command = SpinnerAdvanced2Chimes;
+                break;
+              case 2:
+                Command = SpinnerAdvanced3Chimes;
+                break;
+              case 3:
+                Command = SpinnerAdvanced4Chimes;
+                break;
+              case 4:
+                Command = SpinnerAdvanced5Chimes;
+                break;
+              case 5:
+                Command = SpinnerAdvanced6Chimes;
+                break;
+            } 
             SetGoals(4);
             SpinnerCount[CurrentPlayer] = 0;
             if (SpinnerMode[CurrentPlayer] > 1) {
@@ -3259,7 +3311,33 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             CommandTime = millis();
             CommandQueued = true;
             CommandDelay = 1805;
-            Command = SpinnerCombo;
+            // CFTBL - Add appropriate number of chimes before voice callout
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = SpinnerCombo;
+                break;
+              case 1:
+                Command = SpinnerCombo2Chimes;
+                break;
+              case 2:
+                Command = SpinnerCombo3Chimes;
+                break;
+              case 3:
+                Command = SpinnerCombo4Chimes;
+                break;
+              case 4:
+                Command = SpinnerCombo5Chimes;
+                break;
+              case 5:
+                Command = SpinnerCombo6Chimes;
+                break;
+            } 
             SetGoals(5);
           }
           if ( (SpinnerCount[CurrentPlayer] > (Spinner_Threshold - (Spinner_Threshold*.66))) && (SpinnerCount[CurrentPlayer] < Spinner_Threshold) ) {
