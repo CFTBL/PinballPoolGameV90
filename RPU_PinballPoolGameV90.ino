@@ -116,7 +116,7 @@ const int SuperBonusLit2Chimes = 48;
 const int SuperBonusLit3Chimes = 49;
 const int SuperBonusLit4Chimes = 50;
 const int SuperBonusLit5Chimes = 51;
-const int SuperBonusLit6himes = 52;
+const int SuperBonusLit6Chimes = 52;
 const int PopBumpersAdvanced2Chimes = 53;
 const int PopBumpersAdvanced3Chimes = 54;
 const int PopBumpersAdvanced4Chimes = 55;
@@ -942,16 +942,41 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         CommandTime = millis();
         CommandQueued = true;
         CommandDelay = 500;
-        Command = SuperBonusReady;
-        SetGoals(1);                                              // Duplicate of above
-        EightBallTest[CurrentPlayer] = true;                      // Reset to enable getting 8 ball again
-        if (!OutlaneSpecial[CurrentPlayer]) {                     // Achieving SuperBonus turns on Outlane Special
-          OutlaneSpecial[CurrentPlayer] = true;
-          RPU_SetLampState(LA_OUTLANE_SPECIAL, 1);                // Turn lamp on, signifying mode is active
+        goalsAchieved = 0;
+        for (int i = 0; i < 6; i++) {
+        if (bitRead(Goals[CurrentPlayer], i)) {
+          goalsAchieved++;
         }
-        ArrowsLit[CurrentPlayer] = false;
       }
+      switch (goalsAchieved) {
+        case 0:
+          Command = SuperBonusReady;
+          break;
+        case 1:
+          Command = SuperBonusLit2Chimes;
+          break;
+        case 2:
+          Command = SuperBonusLit3Chimes;
+          break;
+        case 3:
+          Command = SuperBonusLit4Chimes;
+          break;
+        case 4:
+          Command = SuperBonusLit5Chimes;
+          break;
+        case 5:
+          Command = SuperBonusLit6Chimes;
+          break;
+      }
+      SetGoals(1);                                              // Duplicate of above
+      EightBallTest[CurrentPlayer] = true;                      // Reset to enable getting 8 ball again
+      if (!OutlaneSpecial[CurrentPlayer]) {                     // Achieving SuperBonus turns on Outlane Special
+        OutlaneSpecial[CurrentPlayer] = true;
+        RPU_SetLampState(LA_OUTLANE_SPECIAL, 1);                // Turn lamp on, signifying mode is active
+      }
+      ArrowsLit[CurrentPlayer] = false;
     }
+  }
 
 
 //
@@ -3366,7 +3391,33 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             CommandTime = millis();
             CommandQueued = true;
             CommandDelay = 2275;
-            Command = PopBumpersAdvanced;
+            // CFTBL - Count goals achieved 06-26-2026  
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = PopBumpersAdvanced;
+                break;
+              case 1:
+                Command = PopBumpersAdvanced2Chimes;
+                break;
+              case 2:
+                Command = PopBumpersAdvanced3Chimes;
+                break;
+              case 3:
+                Command = PopBumpersAdvanced4Chimes;
+                break;
+              case 4:
+                Command = PopBumpersAdvanced5Chimes;
+                break;
+              case 5:
+                Command = PopBumpersAdvanced6Chimes;
+                break;
+            } 
             if (PopMode[CurrentPlayer] > 1) {
               Command = PopBumpersAdvancedAgain;
             }
