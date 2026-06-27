@@ -8,90 +8,6 @@
  
 */
 
-// CFTBL - Turn on Free Play 06-04-2026
-//
-// CFTBL - Add Super WAV Trigger Sounds 06-18-2026
-//======================================================
-// 00 Stop
-// 01 Ragtime Piano
-// 02 Shoot the Two
-// 03 Shoot the Three
-// 04 Shoot the Four
-// 05 Shoot the Five
-// 06 Shoot the Six
-// 07 Shoot the Seven
-// 08 Get the Eight Ball
-// 09 Shoot the Nine
-// 10 Shoot the Ten
-// 11 Shoot the Eleven
-// 12 Shoot the Twelve
-// 13 Shoot the Thirteen
-// 14 Shoot the Fourteen
-// 15 Shoot the Fifteen
-// 16 Eight Ball Collected
-// 17 Super Bonus Lit (1 chime)
-// 18 Stop Track One
-// 19 Pops
-// 20 Ball Drain
-// 21 Mode Fanfare
-// 22 Next Ball Collected (1 chime)
-// 23 Spinner Advanced (1 chime)
-// 24 Scramble Ball (1 chime)
-// 25 Roaming Ball
-// 26 Alley Mode
-// 27 Two Goals Achieved
-// 28 Four Goals Achieved
-// 29 All Goals Achieved
-// 30 One Goal Achieved
-// 31 Three Goals Achieved
-// 32 Five Goals Achieved
-// 33 Ragtime Piano Delayed 3 Seconds
-// 34 Spinner Combo (1 chime)
-// 35 Pop Bumpers Advanced (1 chime)
-// 36 Pop Bumpers Advanced Again
-// 37 Make the Bankshot. Hurry!
-// 38 Shoot the spinner. Hurry!
-// 39 Scramble Ball Ready
-// 40 Shoot the roaming ball. Hurry!
-// 41 Well done! Let's play fifteen ball!
-// 42 Alley mode. Shoot the Top lanes. Hurry!
-// 43 Next Ball Collected (2 chimes)
-// 44 Next Ball Collected (3 chimes)
-// 45 Next Ball Collected (4 chimes)
-// 46 Next Ball Collected (5 chimes)
-// 47 Next Ball Collected (6 chimes)
-// 48 Super Bonus Lit (2 chimes)
-// 49 Super Bonus Lit (3 chimes)
-// 50 Super Bonus Lit (4 chimes)
-// 51 Super Bonus Lit (5 chimes)
-// 52 Super Bonus Lit (6 chimes)
-// 53 Pop Bumpers Advanced (2 chimes)
-// 54 Pop Bumpers Advanced (3 chimes)
-// 55 Pop Bumpers Advanced (4 chimes)
-// 56 Pop Bumpers Advanced (5 chimes)
-// 57 Pop Bumpers Advanced (6 chimes)
-// 58 Spinner Advanced (2 chimes)
-// 59 Spinner Advanced (3 chimes)
-// 60 Spinner Advanced (4 chimes)
-// 61 Spinner Advanced (5 chimes)
-// 62 Spinner Advanced (6 chimes)
-// 63 Spinner Combo (2 chimes)
-// 64 Spinner Combo (3 chimes)
-// 65 Spinner Combo (4 chimes)
-// 66 Spinner Combo (5 chimes)
-// 67 Spinner Combo (6 chimes)
-// 68 Scramble Ball (2 chimes)
-// 69 Scramble Ball (3 chimes)
-// 70 Scramble Ball (4 chimes)
-// 71 Scramble Ball (5 chimes)
-// 72 Scramble Ball (6 chimes)
-
-
-
-
-
-
-
 //======================================================
 // CFTBL - Super WAV Trigger Wiring
 //======================================================
@@ -147,7 +63,7 @@ bool bitArray[8] = {0,0,0,0,0,0,0,0};
 // CFTBL - pinArray is the set of Arduino pins that the command is written to 06-18-2026
 int pinArray[8] = {39,38,37,36,35,34,33,32};
 
-// CFTBL - Sound files on the Tsunami SD card are prefixed with the following numbers 06-18-2026
+// CFTBL - Sound files on the Tsunami SD card are prefixed with the following numbers 06-26-2026
 const int Stop = 0;
 const int RagtimePiano = 1;
 const int ShoottheTwo = 2;
@@ -182,8 +98,47 @@ const int OneGoalAchieved = 30;
 const int ThreeGoalsAchieved = 31;
 const int FiveGoalsAchieved = 32;
 const int RagtimePianoDelayed = 33;
-const int SpinnerAdvancedAgain = 34;
+const int SpinnerCombo = 34;
 const int PopBumpersAdvanced = 35;
+const int PopBumpersAdvancedAgain = 36;
+const int MaketheBankshotHurry = 37;
+const int ShoottheSpinnerHurry = 38;
+const int ScrambleBallReady = 39;
+const int ShoottheRoamingBallHurry = 40;
+const int WellDoneLetsPlayFifteenBall = 41;
+const int AlleyModeShoottheTopLanesHurry = 42;
+const int NextBallCollected2Chimes = 43;
+const int NextBallCollected3Chimes = 44;
+const int NextBallCollected4Chimes = 45;
+const int NextBallCollected5Chimes = 46;
+const int NextBallCollected6Chimes = 47;
+const int SuperBonusLit2Chimes = 48;
+const int SuperBonusLit3Chimes = 49;
+const int SuperBonusLit4Chimes = 50;
+const int SuperBonusLit5Chimes = 51;
+const int SuperBonusLit6himes = 52;
+const int PopBumpersAdvanced2Chimes = 53;
+const int PopBumpersAdvanced3Chimes = 54;
+const int PopBumpersAdvanced4Chimes = 55;
+const int PopBumpersAdvanced5Chimes = 56;
+const int PopBumpersAdvanced6Chimes = 57;
+const int SpinnerAdvanced2Chimes = 58;
+const int SpinnerAdvanced3Chimes = 59;
+const int SpinnerAdvanced4Chimes = 60;
+const int SpinnerAdvanced5Chimes = 61;
+const int SpinnerAdvanced6Chimes = 62;
+const int SpinnerCombo2Chimes = 63;
+const int SpinnerCombo3Chimes = 64;
+const int SpinnerCombo4Chimes = 65;
+const int SpinnerCombo5Chimes = 66;
+const int SpinnerCombo6Chimes = 67;
+const int ScrambleBall2Chimes = 68;
+const int ScrambleBall3Chimes = 69;
+const int ScrambleBall4Chimes = 70;
+const int ScrambleBall5Chimes = 71;
+const int ScrambleBall6Chimes = 72;
+const int ShoottheSpinner = 73;
+
 
 // MachineState
 //  0 - Attract Mode
@@ -3279,7 +3234,7 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             CommandTime = millis();
             CommandQueued = true;
             CommandDelay = 1805;
-            Command = SpinnerAdvancedAgain;
+            Command = SpinnerCombo;
             SetGoals(5);
           }
           if ( (SpinnerCount[CurrentPlayer] > (Spinner_Threshold - (Spinner_Threshold*.66))) && (SpinnerCount[CurrentPlayer] < Spinner_Threshold) ) {
