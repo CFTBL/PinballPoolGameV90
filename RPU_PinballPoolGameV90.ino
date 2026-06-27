@@ -4026,7 +4026,33 @@ boolean CaptureBall(byte ballswitchnum) {
         CommandTime = millis();
         CommandQueued = true;
         CommandDelay = 1300;
-        Command = NextBallCollected;
+        // CFTBL - Count goals achieved 06-26-2026  
+        goalsAchieved = 0;
+        for (int i = 0; i < 6; i++) {
+          if (bitRead(Goals[CurrentPlayer], i)) {
+            goalsAchieved++;
+          }
+        }
+        switch (goalsAchieved) {
+          case 0:
+            Command = NextBallCollected;
+          break;
+          case 1:
+            Command = NextBallCollected2Chimes;
+          break;
+          case 2:
+            Command = NextBallCollected3Chimes;
+          break;
+          case 3:
+            Command = NextBallCollected4Chimes;
+          break;
+          case 4:
+            Command = NextBallCollected5Chimes;
+          break;
+          case 5:
+            Command = NextBallCollected6Chimes;
+          break;
+        }  
         SetGoals(2);
         // If AlleyMode not running, remove flashing lamp per normal.  If AlleyMode is running it already cleared out
         // flashing in alleys 1-4 so only clear 5-7.
@@ -4087,10 +4113,12 @@ boolean CaptureBall(byte ballswitchnum) {
         if (CurrentPlayer == 1 || CurrentPlayer == 3) {
           actualNextBall = NextBall + 8;
         }
-        CommandTime = millis();
-        CommandQueued = true;
-        CommandDelay = 500;
-        Command = actualNextBall;
+        if (CommandQueued == false) {
+          CommandTime = millis();
+          CommandQueued = true;
+          CommandDelay = 500;
+          Command = actualNextBall;
+        }
  
         // If here NextBall is valid, offset switchnum down by one for lamp number
         // Start lamp flashing, note end state is on, only allowed for lanes 5-7 when AlleyMode is running
