@@ -57,6 +57,9 @@ int actualNextBall;
 // CFTBL - Flag to check 7/15 switch
 bool hit715;
 
+// CFTBL - Flag for Spinner Advanced 06-27-2026
+bool spinnerAdvancedAchieved = 0;
+
 // CFTBL - Goals Achieved 06-24-2026
 int goalsAchieved;
 
@@ -3251,39 +3254,43 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (SpinnerCount[CurrentPlayer] > (Spinner_Threshold - 1)) {
             PlaySoundEffect(SOUND_EFFECT_BALL_OVER, true);            // Plays each increment
             SpinnerMode[CurrentPlayer] += 1;
-            // CFTBL - Play Spinner Advanced callout 06-23-2026
-            CommandTime = millis();
-            CommandQueued = true;
-            CommandDelay = 1775;
-            // CFTBL - Add appropriate number of chimes before voice callout
-            goalsAchieved = 0;
-            for (int i = 0; i < 6; i++) {
-              if (bitRead(Goals[CurrentPlayer], i)) {
-                goalsAchieved++;
+            // CFTBL - Play Spinner Advanced callout if not yet achieved 06-27-2026
+            if (spinnerAdvancedAchieved == 0){
+              spinnerAdvancedAchieved = 1;
+              CommandTime = millis();
+              CommandQueued = true;
+              CommandDelay = 1775;
+              // CFTBL - Add appropriate number of chimes before voice callout
+              goalsAchieved = 0;
+              for (int i = 0; i < 6; i++) {
+                if (bitRead(Goals[CurrentPlayer], i)) {
+                  goalsAchieved++;
+                }
+              }
+              switch (goalsAchieved) {
+                case 0:
+                  Command = SpinnerAdvanced;
+                  break;
+                case 1:
+                  Command = SpinnerAdvanced2Chimes;
+                  break;
+                case 2:
+                  Command = SpinnerAdvanced3Chimes;
+                  break;
+                case 3:
+                  Command = SpinnerAdvanced4Chimes;
+                  break;
+                case 4:
+                  Command = SpinnerAdvanced5Chimes;
+                  break;
+                case 5:
+                  Command = SpinnerAdvanced6Chimes;
+                  break;
               }
             }
-            switch (goalsAchieved) {
-              case 0:
-                Command = SpinnerAdvanced;
-                break;
-              case 1:
-                Command = SpinnerAdvanced2Chimes;
-                break;
-              case 2:
-                Command = SpinnerAdvanced3Chimes;
-                break;
-              case 3:
-                Command = SpinnerAdvanced4Chimes;
-                break;
-              case 4:
-                Command = SpinnerAdvanced5Chimes;
-                break;
-              case 5:
-                Command = SpinnerAdvanced6Chimes;
-                break;
-            } 
             SetGoals(4);
             SpinnerCount[CurrentPlayer] = 0;
+            
             if (SpinnerMode[CurrentPlayer] > 1) {
               SuperSpinnerAllowed[CurrentPlayer] = true;
               MarqueeDisabled = true;
