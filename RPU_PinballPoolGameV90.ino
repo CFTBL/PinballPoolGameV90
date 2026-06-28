@@ -60,6 +60,9 @@ bool hit715;
 // CFTBL - Flag for Spinner Advanced 06-27-2026
 bool spinnerAdvancedAchieved = 0;
 
+// CFTBL - Flag for Super Bonus 06-28-2026
+bool superBonusFlag = 0;
+
 // CFTBL - Goals Achieved 06-24-2026
 int goalsAchieved;
 
@@ -954,6 +957,7 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
           goalsAchieved++;
         }
       }
+      superBonusFlag = 1;
       switch (goalsAchieved) {
         case 0:
           Command = SuperBonusReady;
@@ -1062,33 +1066,36 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
       }
     }
     // CFTBL - Queue goal callout and piano tune at start of each new ball
-    CommandTime = millis();
-    CommandQueued = true;
-    CommandDelay = 500;
-    switch (goalsAchieved) {
-      case 0:
-        Command = RagtimePiano;
-        break;
-      case 1:
-        Command = OneGoalAchieved;
-        break;
-      case 2:
-        Command = TwoGoalsAchieved;
-        break;
-      case 3:
-        Command = ThreeGoalsAchieved;
-        break;
-      case 4:
-        Command = FourGoalsAchieved;
-        break;
-      case 5:
-        Command = FiveGoalsAchieved;
-        break;
-      case 6:
-        Command = AllGoalsAchieved;
-        break; 
+    if (superBonusFlag == 1){
+      superBonusFlag = 0;
+    } else {
+      CommandTime = millis();
+      CommandQueued = true;
+      CommandDelay = 500;
+      switch (goalsAchieved) {
+        case 0:
+          Command = RagtimePiano;
+          break;
+        case 1:
+          Command = OneGoalAchieved;
+          break;
+        case 2:
+          Command = TwoGoalsAchieved;
+          break;
+        case 3:
+          Command = ThreeGoalsAchieved;
+          break;
+        case 4:
+          Command = FourGoalsAchieved;
+          break;
+        case 5:
+          Command = FiveGoalsAchieved;
+          break;
+        case 6:
+          Command = AllGoalsAchieved;
+          break; 
       }
-    
+      }    
     return MACHINE_STATE_NORMAL_GAMEPLAY;
   }
   
