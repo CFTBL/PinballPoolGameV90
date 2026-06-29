@@ -2419,6 +2419,13 @@ if (FifteenBallQualified[CurrentPlayer]) {
     //Serial.println(F("Turning on small ball 8"));
     //Serial.println();
     RPU_SetLampState(LA_SMALL_8, 1);
+    // CFTBL - Play Get the Eight Ball callout 06-28-2026
+    if (CommandQueued == false) {
+      CommandTime = millis();
+      CommandQueued = true;
+      CommandDelay = 500;
+      Command = GetTheEightBall;
+    }
   }
 
 
