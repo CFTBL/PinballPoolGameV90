@@ -3201,6 +3201,11 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
                 RPU_PushToTimedSolenoidStack(SOL_KNOCKER, 3, CurrentTime + 900, true);
                 Balls[CurrentPlayer] = (Balls[CurrentPlayer] | 0b10000000);   // Raise flag for 8 Ball
                 PlaySoundEffect(SOUND_EFFECT_8_BALL_CAPTURE);
+                // CFTBL - Play Eight Ball Collected Callout 06-28-2026
+                CommandTime = millis();
+                CommandQueued = true;
+                CommandDelay = 1400;
+                Command = EightBallCollected;
                 Silent_Hundred_Pts_Stack += 5;
               } else {
                 Hundred_Pts_Stack += 5;
