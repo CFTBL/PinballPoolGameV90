@@ -2424,7 +2424,7 @@ if (FifteenBallQualified[CurrentPlayer]) {
       CommandTime = millis();
       CommandQueued = true;
       CommandDelay = 500;
-      Command = GetTheEightBall;
+      Command = GettheEightBall;
     }
   }
 
