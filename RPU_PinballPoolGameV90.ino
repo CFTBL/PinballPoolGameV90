@@ -54,6 +54,9 @@ const int pinRxAck   = 41; // Input from Listener
 // CFTBL - Actual Next Ball
 int actualNextBall;
 
+// CFTBL - Flag to mark that next ball goal has been achieved 06-29-2026
+bool nextBallCollectedFlag = 0;
+
 // CFTBL - Flag to check 7/15 switch
 bool hit715;
 
@@ -4182,37 +4185,40 @@ boolean CaptureBall(byte ballswitchnum) {
         Silent_Thousand_Pts_Stack +=5;                                        // Award additional NextBall score
         nextSound = SOUND_EFFECT_5K_CHIME;
         //PlaySoundEffect(SOUND_EFFECT_5K_CHIME, true);
-        // CFTBL - Play Next Ball Collected callout 06-23-2026
-        CommandTime = millis();
-        CommandQueued = true;
-        CommandDelay = 1300;
-        // CFTBL - Count goals achieved 06-26-2026  
-        goalsAchieved = 0;
-        for (int i = 0; i < 6; i++) {
-          if (bitRead(Goals[CurrentPlayer], i)) {
-            goalsAchieved++;
+        // CFTBL - Play Next Ball Collected callout 06-29-2026
+        if (nextBallCollectedFlag == 0) {
+          nextBallCollectedFlag = 1;
+          CommandTime = millis();
+          CommandQueued = true;
+          CommandDelay = 1300;
+          // CFTBL - Count goals achieved 06-26-2026  
+          goalsAchieved = 0;
+          for (int i = 0; i < 6; i++) {
+            if (bitRead(Goals[CurrentPlayer], i)) {
+              goalsAchieved++;
+            }
+          }
+          switch (goalsAchieved) {
+            case 0:
+              Command = NextBallCollected;
+              break;
+            case 1:
+              Command = NextBallCollected2Chimes;
+              break;
+            case 2:
+              Command = NextBallCollected3Chimes;
+              break;
+            case 3:
+              Command = NextBallCollected4Chimes;
+              break;
+            case 4:
+              Command = NextBallCollected5Chimes;
+              break;
+            case 5:
+              Command = NextBallCollected6Chimes;
+              break;
           }
         }
-        switch (goalsAchieved) {
-          case 0:
-            Command = NextBallCollected;
-          break;
-          case 1:
-            Command = NextBallCollected2Chimes;
-          break;
-          case 2:
-            Command = NextBallCollected3Chimes;
-          break;
-          case 3:
-            Command = NextBallCollected4Chimes;
-          break;
-          case 4:
-            Command = NextBallCollected5Chimes;
-          break;
-          case 5:
-            Command = NextBallCollected6Chimes;
-          break;
-        }  
         SetGoals(2);
         // If AlleyMode not running, remove flashing lamp per normal.  If AlleyMode is running it already cleared out
         // flashing in alleys 1-4 so only clear 5-7.
