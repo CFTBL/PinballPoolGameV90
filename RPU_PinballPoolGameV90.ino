@@ -3489,6 +3489,37 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             //Serial.println(SuperSpinnerTime, DEC);  
             ClearRack();
             FlashingArrows(RackLeftArrow, 125);
+            // CFTBL - Play Shoot the Spinner for second half of spinner combo 07-01-2026
+            CommandTime = millis();
+            CommandQueued = true;
+            CommandDelay = 1805;
+            // CFTBL - Add appropriate number of chimes before voice callout
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = SpinnerCombo;
+                break;
+              case 1:
+                Command = SpinnerCombo2Chimes;
+                break;
+              case 2:
+                Command = SpinnerCombo3Chimes;
+                break;
+              case 3:
+                Command = SpinnerCombo4Chimes;
+                break;
+              case 4:
+                Command = SpinnerCombo5Chimes;
+                break;
+              case 5:
+                Command = SpinnerCombo6Chimes;
+                break;
+            }
           }
           break;
         case SW_BUMPER_BOTTOM:
