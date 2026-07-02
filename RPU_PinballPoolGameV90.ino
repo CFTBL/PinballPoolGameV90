@@ -8,6 +8,55 @@
  
 */
 
+//=========================================================
+// CFTBL - This branch, "TsunamiHost" adds sounds and music
+// ========================================================
+// Hardware consists of the following:
+// - Dick Hamill's BSOS/J5 Interface Board Revision 3
+// - "Host" RPU Arduino (Arduino Mega development board plugged into the above)
+// - "Slave" WAV Trigger Arduino (An additional Arduino Mega board to drive the WAV trigger board)
+// - Tsunami Super WAV Trigger board (QWIIC Version)
+// - An amplified speaker such as the Big Jambox
+//  
+
+//======================================================
+// CFTBL - Wiring
+//======================================================
+//  BSOS  Host      Slave     Tsunami
+//  ----------------------------------------------------
+//  GND`            GND
+//  GND`                      GND
+//  5V              5V
+//  5V                        5V
+//        D32       D32
+//        D33       D33
+//        D34       D34
+//        D35       D35
+//        D36       D36
+//        D37       D37
+//        D38       D38
+//        D39       D39
+//        D40       D40     pinTxReady
+//        D41       D41     pinRxAck
+//                  TX1     RX via 1K resistor
+//                  GND     RX via 2K Resistor
+//
+// Jambox Black (GND), Red (Right), and White (left) wires connect to Tsunami 1 Output
+
+//======================================================
+// CFTBL - Summary Description
+//======================================================
+// The code in this .ino file runs on the Host (RPU) Arduino that controls the pinball machine
+// There is a separate .ino file that runs on the Slave Arduino
+// Each "command" is sent to the Slave Arduino by writing a byte to digital IO pins 32-39
+// Digital IO pins 40 and 41 are used for handshaking with the Slave Arduino
+// In order to deliver sounds and music based on in-game events, we will keep track of a few things:
+// - Whether the next ball is between 2 and 7, or between 10 and 15 (odd or even player)
+// - Each goal achieved on a per player basis
+// - etc
+
+
+
 #include "RPULite_Config.h"
 #include "RPULite.h"
 #include "PinballPoolGame.h"
@@ -23,6 +72,110 @@
 
 #define USE_SCORE_OVERRIDES
 #define USE_SCORE_ACHIEVEMENTS
+
+// CFTBL - Pins 40 and 41 are for handshaking 07-02-2026
+const int pinTxReady = 40; // Output (Host to Slave Arduino)
+const int pinRxAck   = 41; // Input Slave to Host Arduino
+
+// CFTBL - Actual Next Ball (we'll add 8 for player 2 or player 4) 07-02-2026
+int actualNextBall;
+
+// CFTBL - Flags to track goals achieved on a per player basis 07-02-2026
+bool superBonusCollected[4] = {0,0,0,0};
+bool nextBallCollected[4] = {0,0,0,0};
+bool popBumpersCollected[4] = {0,0,0,0};
+bool spinnerCollected[4] = {0,0,0,0};
+bool spinnerComboCollected[4] = {0,0,0,0};
+bool scrambleBallCollected[4] = {0,0,0,0};
+
+// CFTBL - Flag to check 7/15 switch (no next ball when this switch is hit) 07-02-2026
+bool hit715;
+
+// CFTBL - Goals Achieved 06-24-2026
+int goalsAchieved;
+
+// CFTBL - bitArray will contain the command being sent to the slave Arduino 06-18-2026
+bool bitArray[8] = {0,0,0,0,0,0,0,0};
+
+// CFTBL - pinArray is the set of Arduino pins that the command is written to 06-18-2026
+int pinArray[8] = {39,38,37,36,35,34,33,32};
+
+// CFTBL - Sound files on the Tsunami SD card are prefixed with the following numbers 06-26-2026
+const int Stop = 0;
+const int RagtimePiano = 1;
+const int ShoottheTwo = 2;
+const int ShoottheThree = 3;
+const int ShoottheFour = 4;
+const int ShoottheFive = 5;
+const int ShoottheSix = 6;
+const int ShoottheSeven = 7;
+const int GettheEightBall = 8;
+const int ShoottheNine = 9;
+const int ShoottheTen = 10;
+const int ShoottheEleven = 11;
+const int ShoottheTwelve = 12;
+const int ShoottheThirteen = 13;
+const int ShoottheFourteen = 14;
+const int ShoottheFifteen = 15;
+const int EightBallCollected = 16;
+const int SuperBonusReady = 17;
+const int StopTrackOne = 18;
+const int Pops = 19;
+const int BallDrain = 20;
+const int ModeFanfare = 21;
+const int NextBallCollected = 22;
+const int SpinnerAdvanced = 23;
+const int ScrambleBall = 24;
+const int RoamingBall = 25;
+const int AlleyMode = 26;
+const int TwoGoalsAchieved = 27;
+const int FourGoalsAchieved = 28;
+const int AllGoalsAchieved = 29;
+const int OneGoalAchieved = 30;
+const int ThreeGoalsAchieved = 31;
+const int FiveGoalsAchieved = 32;
+const int RagtimePianoDelayed = 33;
+const int SpinnerCombo = 34;
+const int PopBumpersAdvanced = 35;
+const int PopBumpersAdvancedAgain = 36;
+const int MaketheBankshotHurry = 37;
+const int ShoottheSpinnerHurry = 38;
+const int ScrambleBallReady = 39;
+const int ShoottheRoamingBallHurry = 40;
+const int WellDoneLetsPlayFifteenBall = 41;
+const int AlleyModeShoottheTopLanesHurry = 42;
+const int NextBallCollected2Chimes = 43;
+const int NextBallCollected3Chimes = 44;
+const int NextBallCollected4Chimes = 45;
+const int NextBallCollected5Chimes = 46;
+const int NextBallCollected6Chimes = 47;
+const int SuperBonusLit2Chimes = 48;
+const int SuperBonusLit3Chimes = 49;
+const int SuperBonusLit4Chimes = 50;
+const int SuperBonusLit5Chimes = 51;
+const int SuperBonusLit6Chimes = 52;
+const int PopBumpersAdvanced2Chimes = 53;
+const int PopBumpersAdvanced3Chimes = 54;
+const int PopBumpersAdvanced4Chimes = 55;
+const int PopBumpersAdvanced5Chimes = 56;
+const int PopBumpersAdvanced6Chimes = 57;
+const int SpinnerAdvanced2Chimes = 58;
+const int SpinnerAdvanced3Chimes = 59;
+const int SpinnerAdvanced4Chimes = 60;
+const int SpinnerAdvanced5Chimes = 61;
+const int SpinnerAdvanced6Chimes = 62;
+const int SpinnerCombo2Chimes = 63;
+const int SpinnerCombo3Chimes = 64;
+const int SpinnerCombo4Chimes = 65;
+const int SpinnerCombo5Chimes = 66;
+const int SpinnerCombo6Chimes = 67;
+const int ScrambleBall2Chimes = 68;
+const int ScrambleBall3Chimes = 69;
+const int ScrambleBall4Chimes = 70;
+const int ScrambleBall5Chimes = 71;
+const int ScrambleBall6Chimes = 72;
+const int ShoottheSpinner = 73;
+
 
 // MachineState
 //  0 - Attract Mode
