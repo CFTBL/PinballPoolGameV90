@@ -3278,7 +3278,6 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             SpinnerMode[CurrentPlayer] += 1;
             // CFTBL - Play Spinner Advanced callout if not yet achieved 06-27-2026
             if (spinnerAdvancedAchieved == 0){
-              spinnerAdvancedAchieved = 1;
               CommandTime = millis();
               CommandQueued = true;
               CommandDelay = 1775;
@@ -3292,21 +3291,27 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               switch (goalsAchieved) {
                 case 0:
                   Command = SpinnerAdvanced;
+                  spinnerAdvancedAchieved = 1;
                   break;
                 case 1:
                   Command = SpinnerAdvanced2Chimes;
+                  spinnerAdvancedAchieved = 1;
                   break;
                 case 2:
                   Command = SpinnerAdvanced3Chimes;
+                  spinnerAdvancedAchieved = 1;
                   break;
                 case 3:
                   Command = SpinnerAdvanced4Chimes;
+                  spinnerAdvancedAchieved = 1;
                   break;
                 case 4:
                   Command = SpinnerAdvanced5Chimes;
+                  spinnerAdvancedAchieved = 1;
                   break;
                 case 5:
                   Command = SpinnerAdvanced6Chimes;
+                  spinnerAdvancedAchieved = 1;
                   break;
               }
             }
@@ -3662,6 +3667,14 @@ void loop() {
   if (newMachineState!=MachineState) {
     MachineState = newMachineState;
     MachineStateChanged = true;
+    
+    // CFTBL - When the machine state changes reset all the sound-effect-related flags 06-30-2026
+    nextBallCollectedFlag = 0;
+    hit715 = 0;
+    spinnerAdvancedAchieved = 0;
+    superBonusFlag = 0;
+    goalsAchieved = 0;
+  
   } else {
     MachineStateChanged = false;
   }
