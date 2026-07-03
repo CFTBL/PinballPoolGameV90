@@ -80,7 +80,7 @@ const int pinRxAck   = 41; // Input Slave to Host Arduino
 // CFTBL - Actual Next Ball (we'll add 8 for player 2 or player 4) 07-02-2026
 int actualNextBall;
 
-// CFTBL - Flags to track goals achieved on a per player basis 07-02-2026
+// CFTBL - Flags to track each of the six goals achieved on a per player basis 07-02-2026
 bool superBonusCollected[4] = {0,0,0,0};
 bool nextBallCollected[4] = {0,0,0,0};
 bool popBumpersCollected[4] = {0,0,0,0};
@@ -88,17 +88,26 @@ bool spinnerCollected[4] = {0,0,0,0};
 bool spinnerComboCollected[4] = {0,0,0,0};
 bool scrambleBallCollected[4] = {0,0,0,0};
 
+// CFTBL - Total number of goals achieved on a per player basis 07-02-2026
+int goalsAchieved[4] = {0,0,0,0};
+
 // CFTBL - Flag to check 7/15 switch (no next ball when this switch is hit) 07-02-2026
 bool hit715;
 
-// CFTBL - Goals Achieved 06-24-2026
-int goalsAchieved;
-
-// CFTBL - bitArray will contain the command being sent to the slave Arduino 06-18-2026
+// CFTBL - bitArray to contain the command being sent to the slave Arduino 07-02-2026
 bool bitArray[8] = {0,0,0,0,0,0,0,0};
 
-// CFTBL - pinArray is the set of Arduino pins that the command is written to 06-18-2026
+// CFTBL - pinArray is the set of Arduino pins that the command is written to 07-02-2026
 int pinArray[8] = {39,38,37,36,35,34,33,32};
+
+// CFTBL - Make Free Play the default 07-02-2026
+boolean FreePlayMode = true;
+
+// CFTBL - Variables for sending commands to the slave 07-02-2026
+unsigned long commandTime = 0;
+boolean commandQueued = false;
+int commandDelay = 0;
+int command = 0;
 
 // CFTBL - Sound files on the Tsunami SD card are prefixed with the following numbers 06-26-2026
 const int Stop = 0;
@@ -279,7 +288,7 @@ unsigned long HighScore = 0;
 unsigned long AwardScores[3];           // Score thresholds for awards
 int Credits = 0;
 int MaximumCredits = 20;
-boolean FreePlayMode = false;
+
 boolean MatchFeature = true;            //  Allows Match Feature to run
 
 #define MAX_TILT_WARNINGS_MAX    2
@@ -526,6 +535,26 @@ void setup() {
     Serial.begin(115200);
   }
 
+  // CFTBL - Set up the handshaking pins 07-02-2026
+  pinMode(pinTxReady, OUTPUT);
+  pinMode(pinRxAck, INPUT);
+  
+  // CFTBL - Set all the output pins, 39 through 32 as outputs 07-02-2026
+  for (int i = 0; i < 8; i++) {
+    pinMode(pinArray[i], OUTPUT);
+  }
+  
+  // CFTBL - Let things settle down 07-02-2026
+  delay(3000);
+  
+  // CFTBL - Reset TxReady Pin (HIGH is Inactive) 07-02-2026
+  digitalWrite(pinTxReady, HIGH);
+  
+  // CFTBL - Write zeros to all the output pins 07-02-2026
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(pinArray[i], 0);
+  }
+
   // Tell the OS about game-specific lights and switches
   RPU_SetupGameSwitches(NUM_SWITCHES_WITH_TRIGGERS, NUM_PRIORITY_SWITCHES_WITH_TRIGGERS, TriggeredSwitches);
 
@@ -577,6 +606,25 @@ void setup() {
     Serial.write("Done with setup\n");
   }
 
+}
+
+// CFTBL - Function to convert a sound command to an 8-bit binary number 06-18-24
+void intToBitArray(uint8_t num, bool bits[8]) {
+  for (int i = 0; i < 8; i++) {
+    bits[i] = (num >> (7 - i)) & 0x01;  // MSB first
+  }
+}
+
+// CFTBL - Function to send a binary sound command to the slave Arduino 07-02-26
+void writeBitArrayToOutputPins(bool bits[8]) {
+  while (digitalRead(pinRxAck) == LOW) {} // Wait until listener is ready
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(pinArray[i], bits[i]);
+  }
+  delayMicroseconds(5); // Let voltages settle
+  digitalWrite(pinTxReady, LOW); // Tell the Slave to read the data
+  while (digitalRead(pinRxAck) == HIGH) {} // Wait for acknowledgement
+  digitalWrite(pinTxReady, HIGH); // Tell the slave not to read any more
 }
 
 void ReadStoredParameters() {
