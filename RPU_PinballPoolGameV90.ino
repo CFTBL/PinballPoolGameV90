@@ -74,42 +74,52 @@
 #define USE_SCORE_ACHIEVEMENTS
 
 // CFTBL - Pins 40 and 41 are for handshaking 07-02-2026
+//======================================================
 const int pinTxReady = 40; // Output (Host to Slave Arduino)
 const int pinRxAck   = 41; // Input Slave to Host Arduino
 
 // CFTBL - Actual Next Ball (we'll add 8 for player 2 or player 4) 07-02-2026
+//===========================================================================
 int actualNextBall;
 
 // CFTBL - Flags to track each of the six goals achieved on a per player basis 07-02-2026
-bool superBonusCollected[4] = {0,0,0,0};
+//=======================================================================================
+bool superBonusReady[4] = {0,0,0,0};
 bool nextBallCollected[4] = {0,0,0,0};
 bool popBumpersCollected[4] = {0,0,0,0};
 bool spinnerCollected[4] = {0,0,0,0};
 bool spinnerComboCollected[4] = {0,0,0,0};
 bool scrambleBallCollected[4] = {0,0,0,0};
 
-// CFTBL - Total number of goals achieved on a per player basis 07-02-2026
-int goalsAchieved[4] = {0,0,0,0};
+// CFTBL - Total number of goals achieved 07-04-2026
+//========================================================================
+int goalsAchieved = 0;
 
 // CFTBL - Flag to check 7/15 switch (no next ball when this switch is hit) 07-02-2026
+//====================================================================================
 bool hit715;
 
 // CFTBL - bitArray to contain the command being sent to the slave Arduino 07-02-2026
+//===================================================================================
 bool bitArray[8] = {0,0,0,0,0,0,0,0};
 
 // CFTBL - pinArray is the set of Arduino pins that the command is written to 07-02-2026
+//======================================================================================
 int pinArray[8] = {39,38,37,36,35,34,33,32};
 
 // CFTBL - Make Free Play the default 07-02-2026
+//==============================================
 boolean FreePlayMode = true;
 
 // CFTBL - Variables for sending commands to the slave 07-02-2026
+//===============================================================
 unsigned long commandTime = 0;
 boolean commandQueued = false;
 int commandDelay = 0;
 int command = 0;
 
-// CFTBL - Sound files on the Tsunami SD card are prefixed with the following numbers 06-26-2026
+// CFTBL - Sound files on the Tsunami SD card are prefixed with the following numbers 07-04-2026
+//==============================================================================================
 const int Stop = 0;
 const int RagtimePiano = 1;
 const int ShoottheTwo = 2;
@@ -308,6 +318,13 @@ byte CurrentAchievements[4];            // Score achievments
 unsigned long CurrentTime = 0;
 unsigned long BallTimeInTrough = 0;
 unsigned long BallFirstSwitchHitTime = 0;
+
+// CFTBL - Set up some variables for passing commands 07-04-2026
+//==============================================================
+unsigned long CommandTime = 0;
+boolean CommandQueued = false;
+int CommandDelay = 0;
+int Command = 0;
 
 boolean BallSaveUsed = false;
 #define BALLSAVENUMSECONDS_MAX   20
@@ -536,21 +553,26 @@ void setup() {
   }
 
   // CFTBL - Set up the handshaking pins 07-02-2026
+  //===============================================
   pinMode(pinTxReady, OUTPUT);
   pinMode(pinRxAck, INPUT);
   
   // CFTBL - Set all the output pins, 39 through 32 as outputs 07-02-2026
+  //=====================================================================
   for (int i = 0; i < 8; i++) {
     pinMode(pinArray[i], OUTPUT);
   }
   
   // CFTBL - Let things settle down 07-02-2026
+  //==========================================
   delay(3000);
   
   // CFTBL - Reset TxReady Pin (HIGH is Inactive) 07-02-2026
+  //========================================================
   digitalWrite(pinTxReady, HIGH);
   
   // CFTBL - Write zeros to all the output pins 07-02-2026
+  //======================================================
   for (int i = 0; i < 8; i++) {
     digitalWrite(pinArray[i], 0);
   }
@@ -609,6 +631,7 @@ void setup() {
 }
 
 // CFTBL - Function to convert a sound command to an 8-bit binary number 06-18-24
+//===============================================================================
 void intToBitArray(uint8_t num, bool bits[8]) {
   for (int i = 0; i < 8; i++) {
     bits[i] = (num >> (7 - i)) & 0x01;  // MSB first
@@ -616,6 +639,7 @@ void intToBitArray(uint8_t num, bool bits[8]) {
 }
 
 // CFTBL - Function to send a binary sound command to the slave Arduino 07-02-26
+//==============================================================================
 void writeBitArrayToOutputPins(bool bits[8]) {
   while (digitalRead(pinRxAck) == LOW) {} // Wait until listener is ready
   for (int i = 0; i < 8; i++) {
@@ -964,6 +988,40 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         RPU_SetLampState(LA_SUPER_BONUS, 1);                      // Turn on SuperBonus lamp
         Balls[CurrentPlayer] = 0x8000;                            // Wipe out all collected balls, set SuperBonus
         SetGoals(1);                                              // Duplicate of above
+
+        // CFTBL - Play Super Bonus callout and flag it as collected 07-04-2026
+        //=====================================================================
+        CommandTime = millis();
+        CommandQueued = true;
+        CommandDelay = 500;
+        goalsAchieved = 0;
+        for (int i = 0; i < 6; i++) {
+        if (bitRead(Goals[CurrentPlayer], i)) {
+          goalsAchieved++;
+        }
+      }
+      superBonusReady[CurrentPlayer] = 1;
+      switch (goalsAchieved) {
+        case 0:
+          Command = SuperBonusReady;
+          break;
+        case 1:
+          Command = SuperBonusLit2Chimes;
+          break;
+        case 2:
+          Command = SuperBonusLit3Chimes;
+          break;
+        case 3:
+          Command = SuperBonusLit4Chimes;
+          break;
+        case 4:
+          Command = SuperBonusLit5Chimes;
+          break;
+        case 5:
+          Command = SuperBonusLit6Chimes;
+          break;
+      }
+        
         EightBallTest[CurrentPlayer] = true;                      // Reset to enable getting 8 ball again
         if (!OutlaneSpecial[CurrentPlayer]) {                     // Achieving SuperBonus turns on Outlane Special
           OutlaneSpecial[CurrentPlayer] = true;
@@ -972,7 +1030,6 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         ArrowsLit[CurrentPlayer] = false;
       }
     }
-
 
 //
 //  15 Ball Mode
@@ -1043,6 +1100,48 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
     //Serial.println(F("--InitNewBall, ball still in outhole--"));
     return MACHINE_STATE_INIT_NEW_BALL;
   } else {
+    
+        // CFTBL - Count goals achieved 06-24-2026  
+    goalsAchieved = 0;
+    for (int i = 0; i < 6; i++) {
+      if (bitRead(Goals[CurrentPlayer], i)) {
+        goalsAchieved++;
+      }
+    }
+    
+    // CFTBL - At start of each new ball play goals achieved or Super Bonus callout, plus piano
+    //=========================================================================================
+    if (superBonusReady[CurrentPlayer] == 1){
+      superBonusReady[CurrentPlayer] = 0;
+    } else {
+      CommandTime = millis();
+      CommandQueued = true;
+      CommandDelay = 500;
+      switch (goalsAchieved) {
+        case 0:
+          Command = RagtimePiano;
+          break;
+        case 1:
+          Command = OneGoalAchieved;
+          break;
+        case 2:
+          Command = TwoGoalsAchieved;
+          break;
+        case 3:
+          Command = ThreeGoalsAchieved;
+          break;
+        case 4:
+          Command = FourGoalsAchieved;
+          break;
+        case 5:
+          Command = FiveGoalsAchieved;
+          break;
+        case 6:
+          Command = AllGoalsAchieved;
+          break; 
+      }
+    }  
+    
     return MACHINE_STATE_NORMAL_GAMEPLAY;
   }
   
@@ -2366,8 +2465,17 @@ if (FifteenBallQualified[CurrentPlayer]) {
     //Serial.println(F("Turning on small ball 8"));
     //Serial.println();
     RPU_SetLampState(LA_SMALL_8, 1);
-  }
 
+    // CFTBL - Play Get the Eight Ball callout 07-04-2026
+    //===================================================
+    if (CommandQueued == false) {
+      CommandTime = millis();
+      CommandQueued = true;
+      CommandDelay = 500;
+      Command = GettheEightBall;
+    }
+    
+  }
 
 //
 //  ArrowsLit mode - Set to 1 when lanes 1-4 collected
@@ -3003,7 +3111,40 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             if (!(Goals[CurrentPlayer] & (0b1<<5))) {         // If Goal 6 not set
               PlaySoundEffect(SOUND_EFFECT_SCRAMBLE_BALL, true);
             }
-            SetGoals(6);                                      // Set goal as completed
+           
+            // CFTBL - Play Scramble Mode Callout 07-04-2026
+            //==============================================
+            CommandTime = millis();
+            CommandQueued = true;
+            CommandDelay = 1550;
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = ScrambleBall;
+                break;
+              case 1:
+                Command = ScrambleBall2Chimes;
+                break;
+              case 2:
+                Command = ScrambleBall3Chimes;
+                break;
+              case 3:
+                Command = ScrambleBall4Chimes;
+                break;
+              case 4:
+                Command = ScrambleBall5Chimes;
+                break;
+              case 5:
+                Command = ScrambleBall6Chimes;
+                break;
+            } 
+           
+           SetGoals(6);                                      // Set goal as completed
             //NextBall = 0;                                     // Cancel NextBall in case active
             //NextBallTime = 0;
             NextBallFinish();
@@ -3016,6 +3157,11 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           }
           break;
         case SW_7_15_BALL:
+
+          // CFTBL - Set a flag if 7-15 switch is hit 07-04-2026
+          //====================================================
+          hit715 = 1;
+
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
           if (!CaptureBall(7)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
@@ -3038,6 +3184,12 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (!CaptureBall(4)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
+
+          // CFTBL - Lane Switch was hit so stop track one 07-04-2026
+          //=========================================================
+          intToBitArray(StopTrackOne, bitArray);
+          writeBitArrayToOutputPins(bitArray);
+
           break;
         case SW_3_11_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
@@ -3059,6 +3211,12 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
+
+          // CFTBL - Lane Switch was hit so stop track one 07-04-2026
+          //=========================================================
+          intToBitArray(StopTrackOne, bitArray);
+          writeBitArrayToOutputPins(bitArray);
+
           break;
         case SW_2_10_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
@@ -3080,12 +3238,24 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               }*/
             }
           }
+
+          // CFTBL - Lane Switch was hit so stop track one 07-04-2026
+          //=========================================================
+          intToBitArray(StopTrackOne, bitArray);
+          writeBitArrayToOutputPins(bitArray);
+
           break;
         case SW_1_9_BALL: // Balls[]
           if (BallFirstSwitchHitTime == 0) BallFirstSwitchHitTime = CurrentTime;
           if (!CaptureBall(1)) {  // If ball already captured, CaptureBall is false
             Hundred_Pts_Stack += 5;
           }
+
+          // CFTBL - Lane Switch was hit so stop track one 07-04-2026
+          //=========================================================
+          intToBitArray(StopTrackOne, bitArray);
+          writeBitArrayToOutputPins(bitArray);
+
           break;
         case SW_8_BALL:
           switch (GameMode[CurrentPlayer]) {
@@ -3103,6 +3273,13 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
                 RPU_PushToTimedSolenoidStack(SOL_KNOCKER, 3, CurrentTime + 900, true);
                 Balls[CurrentPlayer] = (Balls[CurrentPlayer] | 0b10000000);   // Raise flag for 8 Ball
                 PlaySoundEffect(SOUND_EFFECT_8_BALL_CAPTURE);
+
+                // CFTBL - Play Eight Ball Collected Callout 07-04-2026
+                CommandTime = millis();
+                CommandQueued = true;
+                CommandDelay = 1400;
+                Command = EightBallCollected;
+
                 Silent_Hundred_Pts_Stack += 5;
               } else {
                 Hundred_Pts_Stack += 5;
@@ -3163,6 +3340,47 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           if (SpinnerCount[CurrentPlayer] > (Spinner_Threshold - 1)) {
             PlaySoundEffect(SOUND_EFFECT_BALL_OVER, true);            // Plays each increment
             SpinnerMode[CurrentPlayer] += 1;
+
+            // CFTBL - Play Spinner Advanced callout if not yet achieved 07-04-2026
+            //=====================================================================
+            if (spinnerCollected[CurrentPlayer] == 0){
+              CommandTime = millis();
+              CommandQueued = true;
+              CommandDelay = 1775;
+              goalsAchieved = 0;
+              for (int i = 0; i < 6; i++) {
+                if (bitRead(Goals[CurrentPlayer], i)) {
+                  goalsAchieved++;
+                }
+              }
+              switch (goalsAchieved) {
+                case 0:
+                  Command = SpinnerAdvanced;
+                  spinnerCollected[CurrentPlayer] = 1;
+                  break;
+                case 1:
+                  Command = SpinnerAdvanced2Chimes;
+                  spinnerCollected[CurrentPlayer] = 1;
+                  break;
+                case 2:
+                  Command = SpinnerAdvanced3Chimes;
+                  spinnerCollected[CurrentPlayer] = 1;
+                  break;
+                case 3:
+                  Command = SpinnerAdvanced4Chimes;
+                  spinnerCollected[CurrentPlayer] = 1;
+                  break;
+                case 4:
+                  Command = SpinnerAdvanced5Chimes;
+                  spinnerCollected[CurrentPlayer] = 1;
+                  break;
+                case 5:
+                  Command = SpinnerAdvanced6Chimes;
+                  spinnerCollected[CurrentPlayer] = 1;
+                  break;
+              }
+            }
+
             SetGoals(4);
             SpinnerCount[CurrentPlayer] = 0;
             if (SpinnerMode[CurrentPlayer] > 1) {
@@ -3193,6 +3411,39 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             SuperSpinnerDuration = 0;
             Silent_Thousand_Pts_Stack +=25;
             PlaySoundEffect(SOUND_EFFECT_SPINNER_COMBO, true);
+
+            // CFTBL - Play Spinner Combo callout 07-04-2026
+            //==============================================
+            CommandTime = millis();
+            CommandQueued = true;
+            CommandDelay = 1805;
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = SpinnerCombo;
+                break;
+              case 1:
+                Command = SpinnerCombo2Chimes;
+                break;
+              case 2:
+                Command = SpinnerCombo3Chimes;
+                break;
+              case 3:
+                Command = SpinnerCombo4Chimes;
+                break;
+              case 4:
+                Command = SpinnerCombo5Chimes;
+                break;
+              case 5:
+                Command = SpinnerCombo6Chimes;
+                break;
+            } 
+
             SetGoals(5);
           }
           if ( (SpinnerCount[CurrentPlayer] > (Spinner_Threshold - (Spinner_Threshold*.66))) && (SpinnerCount[CurrentPlayer] < Spinner_Threshold) ) {
@@ -3320,6 +3571,41 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
           PopCount[CurrentPlayer] = ++PopCount[CurrentPlayer];
           if (PopCount[CurrentPlayer] > (Pop_Threshold-1)) {
             PopMode[CurrentPlayer] += 1;
+
+            // CFTBL - Play Pop Bumpers Advanced or Pop Bumpers Advanced Again callout 07-04-2026
+            CommandTime = millis();
+            CommandQueued = true;
+            CommandDelay = 2275;
+            goalsAchieved = 0;
+            for (int i = 0; i < 6; i++) {
+              if (bitRead(Goals[CurrentPlayer], i)) {
+                goalsAchieved++;
+              }
+            }
+            switch (goalsAchieved) {
+              case 0:
+                Command = PopBumpersAdvanced;
+                break;
+              case 1:
+                Command = PopBumpersAdvanced2Chimes;
+                break;
+              case 2:
+                Command = PopBumpersAdvanced3Chimes;
+                break;
+              case 3:
+                Command = PopBumpersAdvanced4Chimes;
+                break;
+              case 4:
+                Command = PopBumpersAdvanced5Chimes;
+                break;
+              case 5:
+                Command = PopBumpersAdvanced6Chimes;
+                break;
+            } 
+            if (PopMode[CurrentPlayer] > 1) {
+              Command = PopBumpersAdvancedAgain;
+            }
+
             SetGoals(3);
             PopCount[CurrentPlayer] = 0;
             PlaySoundEffect(SOUND_EFFECT_POP_MODE, true);
@@ -3426,6 +3712,17 @@ void loop() {
   RPU_DataRead(0);
 
   CurrentTime = millis();
+
+  // CFTBL - Process queued sound 07-04-2026
+  //========================================
+  if (CommandQueued == true) {
+    if ((CurrentTime - CommandTime) >= CommandDelay) {
+      CommandQueued = false;
+      intToBitArray(Command, bitArray);
+      writeBitArrayToOutputPins(bitArray);
+    }
+  }
+
   int newMachineState = MachineState;
 
   // Machine state is self-test/attract/game play
@@ -3440,6 +3737,20 @@ void loop() {
   if (newMachineState!=MachineState) {
     MachineState = newMachineState;
     MachineStateChanged = true;
+
+    // CFTBL - When the machine state changes reset all the sound-effect-related flags 07-04-2026
+    //===========================================================================================
+    for (int i = 0; i < 4; i++) {
+      nextBallCollected[i] = 0;
+    }
+    for (int i = 0; i < 4; i++) {
+      spinnerCollected[i] = 0;
+    }
+        for (int i = 0; i < 4; i++) {
+      superBonusReady[i] = 0;
+    }
+    hit715 = 0;
+    
   } else {
     MachineStateChanged = false;
   }
@@ -3963,6 +4274,43 @@ boolean CaptureBall(byte ballswitchnum) {
         Silent_Thousand_Pts_Stack +=5;                                        // Award additional NextBall score
         nextSound = SOUND_EFFECT_5K_CHIME;
         //PlaySoundEffect(SOUND_EFFECT_5K_CHIME, true);
+
+        // CFTBL - Play Next Ball Collected callout 07-04-2026
+        //====================================================
+        if (nextBallCollected[CurrentPlayer] == 0) {
+          nextBallCollected[CurrentPlayer] = 1;
+          CommandTime = millis();
+          CommandQueued = true;
+          CommandDelay = 1300;
+          // CFTBL - Count goals achieved 06-26-2026  
+          goalsAchieved = 0;
+          for (int i = 0; i < 6; i++) {
+            if (bitRead(Goals[CurrentPlayer], i)) {
+              goalsAchieved++;
+            }
+          }
+          switch (goalsAchieved) {
+            case 0:
+              Command = NextBallCollected;
+              break;
+            case 1:
+              Command = NextBallCollected2Chimes;
+              break;
+            case 2:
+              Command = NextBallCollected3Chimes;
+              break;
+            case 3:
+              Command = NextBallCollected4Chimes;
+              break;
+            case 4:
+              Command = NextBallCollected5Chimes;
+              break;
+            case 5:
+              Command = NextBallCollected6Chimes;
+              break;
+          }
+        }
+
         SetGoals(2);
         // If AlleyMode not running, remove flashing lamp per normal.  If AlleyMode is running it already cleared out
         // flashing in alleys 1-4 so only clear 5-7.
@@ -4017,7 +4365,23 @@ boolean CaptureBall(byte ballswitchnum) {
         // Change to new NextBall
         NextBall = NextBallCheck;
         NextBallTime = CurrentTime;
- 
+
+        // CFTBL - Play Next Ball Callout but skip if 7/15 was the switch (player numbering starts with 0) 07-04-2026
+        //===========================================================================================================
+        if (hit715 == 0){
+          actualNextBall = NextBall;
+          if (CurrentPlayer == 1 || CurrentPlayer == 3) {
+            actualNextBall = NextBall + 8;
+          }
+          if (CommandQueued == false) {
+            CommandTime = millis();
+            CommandQueued = true;
+            CommandDelay = 500;
+            Command = actualNextBall;
+          }
+        }
+        hit715 = 0;
+  
         // If here NextBall is valid, offset switchnum down by one for lamp number
         // Start lamp flashing, note end state is on, only allowed for lanes 5-7 when AlleyMode is running
         if (AlleyModeActive == 0) {                                   // Flash chosen NextBall lamp
