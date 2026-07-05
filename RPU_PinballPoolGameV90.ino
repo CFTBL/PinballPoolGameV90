@@ -2530,7 +2530,6 @@ if (FifteenBallQualified[CurrentPlayer]) {
     }
   }
 
-
 //
 //  SpinnerKickerLit mode - delayed Kicker turn off
 //
