@@ -3344,6 +3344,7 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             // CFTBL - Play Spinner Advanced callout if not yet achieved 07-04-2026
             //=====================================================================
             if (spinnerCollected[CurrentPlayer] == 0){
+              spinnerCollected[CurrentPlayer] = 1;
               CommandTime = millis();
               CommandQueued = true;
               CommandDelay = 1775;
@@ -3356,27 +3357,21 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               switch (goalsAchieved) {
                 case 0:
                   Command = SpinnerAdvanced;
-                  spinnerCollected[CurrentPlayer] = 1;
                   break;
                 case 1:
                   Command = SpinnerAdvanced2Chimes;
-                  spinnerCollected[CurrentPlayer] = 1;
                   break;
                 case 2:
                   Command = SpinnerAdvanced3Chimes;
-                  spinnerCollected[CurrentPlayer] = 1;
                   break;
                 case 3:
                   Command = SpinnerAdvanced4Chimes;
-                  spinnerCollected[CurrentPlayer] = 1;
                   break;
                 case 4:
                   Command = SpinnerAdvanced5Chimes;
-                  spinnerCollected[CurrentPlayer] = 1;
                   break;
                 case 5:
                   Command = SpinnerAdvanced6Chimes;
-                  spinnerCollected[CurrentPlayer] = 1;
                   break;
               }
             }
@@ -3388,6 +3383,14 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               MarqueeDisabled = true;
               ClearRack();
               FlashingArrows(RackRightArrow, 125);
+
+              // CFTBL - Play Make the Bank shot callout 07-04-2026
+              //==================================================================
+              CommandTime = millis();
+              CommandQueued = true;
+              CommandDelay = 1775;
+              Command = MaketheBankshotHurry;
+              
             }
           }
           #ifdef EXECUTION_MESSAGES
@@ -3738,7 +3741,7 @@ void loop() {
     MachineState = newMachineState;
     MachineStateChanged = true;
 
-/*
+
     // CFTBL - When the machine state changes reset all the sound-effect-related flags 07-04-2026
     //===========================================================================================
     for (int i = 0; i < 4; i++) {
@@ -3751,7 +3754,7 @@ void loop() {
       superBonusReady[i] = 0;
     }
     hit715 = 0;
-  */
+  
 
   } else {
     MachineStateChanged = false;
