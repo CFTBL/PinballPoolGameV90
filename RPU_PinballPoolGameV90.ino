@@ -3738,6 +3738,7 @@ void loop() {
     MachineState = newMachineState;
     MachineStateChanged = true;
 
+/*
     // CFTBL - When the machine state changes reset all the sound-effect-related flags 07-04-2026
     //===========================================================================================
     for (int i = 0; i < 4; i++) {
@@ -3750,7 +3751,8 @@ void loop() {
       superBonusReady[i] = 0;
     }
     hit715 = 0;
-    
+  */
+
   } else {
     MachineStateChanged = false;
   }
