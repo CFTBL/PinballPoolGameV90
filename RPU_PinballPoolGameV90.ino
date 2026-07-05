@@ -3563,6 +3563,14 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
             //Serial.println(SuperSpinnerTime, DEC);  
             ClearRack();
             FlashingArrows(RackLeftArrow, 125);
+
+            // CFTBL - Play Shoot the Spinner callout 07-05-2026
+            //===================================================
+            CommandTime = millis();
+            CommandQueued = true;
+            CommandDelay = 500;
+            Command = ShoottheSpinnerHurry;
+
           }
           break;
         case SW_BUMPER_BOTTOM:
