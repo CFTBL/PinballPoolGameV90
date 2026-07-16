@@ -1008,9 +1008,9 @@ int InitNewBall(bool curStateChanged, byte playerNum, int ballNum) {  //zzzzz
         case 1:
           Command = SuperBonusLit2Chimes;
           break;
-        case 2:
-          Command = SuperBonusLit3Chimes;
-          break;
+        //case 2:
+        //  Command = SuperBonusLit3Chimes;
+        //  break;
         case 3:
           Command = SuperBonusLit4Chimes;
           break;
@@ -3129,9 +3129,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               case 1:
                 Command = ScrambleBall2Chimes;
                 break;
-              case 2:
-                Command = ScrambleBall3Chimes;
-                break;
+              //case 2:
+              //  Command = ScrambleBall3Chimes;
+              //  break;
               case 3:
                 Command = ScrambleBall4Chimes;
                 break;
@@ -3360,9 +3360,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
                 case 1:
                   Command = SpinnerAdvanced2Chimes;
                   break;
-                case 2:
-                  Command = SpinnerAdvanced3Chimes;
-                  break;
+                //case 2:
+                //  Command = SpinnerAdvanced3Chimes;
+                //  break;
                 case 3:
                   Command = SpinnerAdvanced4Chimes;
                   break;
@@ -3432,9 +3432,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               case 1:
                 Command = SpinnerCombo2Chimes;
                 break;
-              case 2:
-                Command = SpinnerCombo3Chimes;
-                break;
+              //case 2:
+              //  Command = SpinnerCombo3Chimes;
+              //  break;
               case 3:
                 Command = SpinnerCombo4Chimes;
                 break;
@@ -3599,9 +3599,9 @@ int RunGamePlayMode(int curState, boolean curStateChanged) {
               case 1:
                 Command = PopBumpersAdvanced2Chimes;
                 break;
-              case 2:
-                Command = PopBumpersAdvanced3Chimes;
-                break;
+              //case 2:
+              //  Command = PopBumpersAdvanced3Chimes;
+              //  break;
               case 3:
                 Command = PopBumpersAdvanced4Chimes;
                 break;
@@ -4316,9 +4316,9 @@ boolean CaptureBall(byte ballswitchnum) {
             case 1:
               Command = NextBallCollected2Chimes;
               break;
-            case 2:
-              Command = NextBallCollected3Chimes;
-              break;
+            //case 2:
+            //  Command = NextBallCollected3Chimes;
+            //  break;
             case 3:
               Command = NextBallCollected4Chimes;
               break;
