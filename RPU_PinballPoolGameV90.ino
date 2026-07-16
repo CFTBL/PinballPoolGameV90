@@ -4191,6 +4191,14 @@ void SetGoals(byte goalnum) {   // Set goal flag and update display score
     #ifdef EXECUTION_MESSAGES
     Serial.println(F("SetGoals - Starting Mode 4 Roaming"));
     #endif
+    
+     // CFTBL - Play Roaming Mode callout 07-16-2026
+              //==================================================================
+              CommandTime = millis();
+              CommandQueued = true;
+              CommandDelay = 500;
+              Command = RoamingBall;
+    
     // Set goal bit in CaptureBall instead of here
     //Goals[CurrentPlayer] = (Goals[CurrentPlayer] | (0b1<<6));       // Raise 7th bit
     AlleyModeFinish();                                              // Cancel if running
