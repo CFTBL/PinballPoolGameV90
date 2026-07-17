@@ -3896,6 +3896,14 @@ void NextBallFinish() {
 
 void AlleyModeStart() {
   if (GameMode[CurrentPlayer] == 1) {
+
+    // CFTBL - Alley Mode callout 07-16-2026
+    //======================================
+    CommandTime = millis();
+    CommandQueued = true;
+    CommandDelay = 500;
+    Command = AlleyMode;
+
     AlleyModePopsTrigger = false;                      // Set triggers to false and start mode
     AlleyModeSpinnerTrigger = false;
     AlleyModeActive = 1;                               // Triggers mode
